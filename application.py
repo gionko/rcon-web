@@ -11,6 +11,6 @@ store = simplekv.memory.DictStore()
 flask_kvsession.KVSessionExtension(store, app)
 
 
-@app.route("/")
+@app.route('/')
 def index():
-    return "<html><body><h1>RCON-Web</h1></body></html>"
+    return flask.render_template('index.html')
