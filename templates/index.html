@@ -1,9 +1,239 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Flask Template Example</title>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+		<title>Server name</title>
+
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.9/semantic.min.css">
+
+		<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 	</head>
 	<body>
-		<h1>rcon-web</h1>
+		<div class="ui container">
+
+			<h2 class="ui center aligned header">Server name</h2>
+
+			<div class="ui one cards">
+				<div class="ui card">
+					<div class="content">
+						<div class="header">
+							Players
+						</div>
+						<div class="meta">
+							<span class="category">X humans, Y bots</span>
+						</div>
+						<div class="description">
+							<table class="ui unstackable selectable table rcon-unselectable">
+								<thead>
+									<tr>
+										<th>Name</th>
+										<th>Steam ID</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="user_action" data-name="User 1" data-value="STEAM_1:1:12345678">User 1</td>
+										<td class="user_action" data-name="User 1" data-value="STEAM_1:1:12345678">STEAM_1:1:12345678</td>
+									</tr>
+									<tr>
+										<td class="user_action" data-name="User 2" data-value="STEAM_1:1:87654321">User 2</td>
+										<td class="user_action" data-name="User 2" data-value="STEAM_1:1:12345678">STEAM_1:1:87654321</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="ui card">
+					<div class="content">
+						<div class="header">
+							Map
+						</div>
+						<div class="meta">
+							<span class="category">buhriz_coop</span>
+						</div>
+						<div class="description">
+							<table class="ui unstackable selectable table rcon-unselectable">
+								<thead>
+									<tr>
+										<th>Name</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="map_action" data-name="Buhriz" data-value="buhriz_coop checkpoint">Buhriz</td>
+									</tr>
+									<tr>
+										<td class="map_action" data-name="Heights" data-value="heights_coop checkpoint">Heights</td>
+									</tr>
+									<tr>
+										<td class="map_action" data-name="Market" data-value="market_coop checkpoint">Market</td>
+									</tr>
+									<tr>
+										<td class="map_action" data-name="Verticality" data-value="verticality_coop checkpoint">Verticality</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="ui small basic modal user_dialog">
+			<div class="ui icon header">
+				<i class="ban icon"></i>
+				Ban/kick user
+			</div>
+			<div class="content rcon-center">
+				<p>Are you sure you want to ban/kick user <b class="value-user"></b>?</p>
+				<p>
+					Message:
+					<div class="four ui buttons">
+						<div class="ui inverted button rcon-button-ban-msg" data-value="AFK">AFK</div>
+						<div class="ui inverted button rcon-button-ban-msg" data-value="GTFO">GTFO</div>
+						<div class="ui inverted button rcon-button-ban-msg" data-value="NAZI">NAZI</div>
+						<div class="ui inverted button rcon-button-ban-msg" data-value="TK">TK</div>
+					</div>
+				</p>
+				<p>
+					Period:
+					<div class="six ui buttons">
+						<div class="ui inverted button rcon-button-ban-period" data-value="0">P</div>
+						<div class="ui inverted button rcon-button-ban-period" data-value="60">1H</div>
+						<div class="ui inverted button rcon-button-ban-period" data-value="180">3H</div>
+						<div class="ui inverted button rcon-button-ban-period" data-value="1440">1D</div>
+						<div class="ui inverted button rcon-button-ban-period" data-value="4320">3D</div>
+						<div class="ui inverted button rcon-button-ban-period" data-value="10080">7D</div>
+					</div>
+				</p>
+			</div>
+			<div class="actions rcon-center">
+				<div class="ui green cancel inverted button">
+					<i class="remove icon"></i>
+					No
+				</div>
+				<div class="ui yellow ok kick inverted disabled button">
+					<i class="checkmark icon"></i>
+					Kick
+				</div>
+				<div class="ui red ok ban inverted disabled button">
+					<i class="checkmark icon"></i>
+					Ban
+				</div>
+			</div>
+		</div>
+
+		<div class="ui small basic modal map_dialog">
+			<div class="ui icon header">
+				<i class="map icon"></i>
+				Change map
+			</div>
+			<div class="content rcon-center">
+				<p>Are you sure you want to change map to <b class="value-map"></b>?</p>
+			</div>
+			<div class="actions rcon-center">
+				<div class="ui green cancel inverted button">
+					<i class="remove icon"></i>
+					No
+				</div>
+				<div class="ui red ok inverted button">
+					<i class="checkmark icon"></i>
+					Yes
+				</div>
+			</div>
+		</div>
+
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.9/semantic.min.js"></script>
+
+		<script>
+			var name, value;
+			$(function() {
+				// Ban dialog button callbacks
+				$('.rcon-button-ban-msg').on('click', function(e) {
+					// Keep only one message selected
+					$('.rcon-button-ban-msg').removeClass('active');
+					$(this).toggleClass('active');
+					// Enable kick/ban buttons
+					$('.kick.button').removeClass('disabled');
+					var message_selected = $('.rcon-button-ban-period.active').length;
+					if (message_selected > 0) {
+						$('.ban.button').removeClass('disabled');
+					}
+				});
+				$('.rcon-button-ban-period').on('click', function(e) {
+					// Keep only one period selected
+					$('.rcon-button-ban-period').removeClass('active');
+					$(this).toggleClass('active');
+					// Enable ban button
+					var message_selected = $('.rcon-button-ban-msg.active').length;
+					if (message_selected > 0) {
+						$('.ban.button').removeClass('disabled');
+					}
+				});
+
+				// Open user dialog on user row click
+				$('.user_action').click(function() {
+					name  = $(this).data('name');
+					value = $(this).data('value');
+					$('.value-user').text(name);
+					$('.user_dialog').modal('show');
+				});
+
+				// Open map dialog on map row click
+				$('.map_action').click(function() {
+					name  = $(this).data('name');
+					value = $(this).data('value');
+					$('.value-map').text(name);
+					$('.map_dialog').modal('show');
+				});
+
+				// Configure user dialog callbacks
+				$('.user_dialog').modal({
+					onApprove: function(e) {
+						if (e.hasClass('kick')) {
+							var msg = $('.rcon-button-ban-msg.active').data('value');
+							// TODO: Add rcon ajax call:
+							//       kickid <value> <msg>
+							location.reload(true);
+						}
+						else
+						if (e.hasClass('ban')) {
+							var msg = $('.rcon-button-ban-msg.active').data('value');
+							var period = $('.rcon-button-ban-period.active').data('value');
+							// TODO: Add rcon ajax call:
+							//       banid <period> <value>
+							//       kickid <value> <msg>
+							location.reload(true);
+						}
+						// Reset button states
+						$('.rcon-button-ban-msg').removeClass('active');
+						$('.rcon-button-ban-period').removeClass('active');
+						$('.kick.button').addClass('disabled');
+						$('.ban.button').addClass('disabled');
+					},
+					onDeny: function(e) {
+						// Reset button states
+						$('.rcon-button-ban-msg').removeClass('active');
+						$('.rcon-button-ban-period').removeClass('active');
+						$('.kick.button').addClass('disabled');
+						$('.ban.button').addClass('disabled');
+					}
+				});
+
+				// Configure map dialog callbacks
+				$('.map_dialog').modal({
+					onApprove: function(e) {
+						// TODO: Add rcon ajax call:
+						//       changelevel <value>
+						location.reload(true);
+					}
+				});
+			});
+		</script>
 	</body>
 </html>
