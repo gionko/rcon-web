@@ -25,6 +25,8 @@ config = configobj.ConfigObj(__path__ + '/rcon-web.conf')
 
 @app.route('/')
 def index():
+    title = 'Server name'
+
     players_status = '2 humans, 8 bots'
     players = [
         {
@@ -41,6 +43,7 @@ def index():
     maps = [{'name': name, 'value': config['maps'][name]['value']} for name in config['maps']]
 
     return flask.render_template('index.html',
+                                 title=title,
                                  players_status=players_status,
                                  players=players,
                                  maps_status=maps_status,
