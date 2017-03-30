@@ -25,6 +25,10 @@ config = configobj.ConfigObj(__path__ + '/rcon-web.conf')
 
 @app.route('/')
 def index():
+
+    if 'login' not in flask.session:
+        return flask.redirect(flask.url_for('login'))
+
     title = 'Server name'
 
     players_status = '2 humans, 8 bots'
@@ -48,3 +52,13 @@ def index():
                                  players=players,
                                  maps_status=maps_status,
                                  maps=maps)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if flask.request.method == 'POST':
+        if flask.request.form['password'] == config['server']['password']:
+            flask.session['login'] = True
+            return flask.redirect(flask.url_for('index'))
+
+    flask.session.pop('login', None)
+    return flask.render_template('login.html')
