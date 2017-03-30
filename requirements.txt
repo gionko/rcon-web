@@ -1,3 +1,4 @@
+ConfigObj
 Flask
 Flask-KVSession
 uWSGI

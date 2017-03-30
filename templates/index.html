@@ -23,7 +23,7 @@
 							Players
 						</div>
 						<div class="meta">
-							<span class="category">X humans, Y bots</span>
+							<span class="category">{{ players_status }}</span>
 						</div>
 						<div class="description">
 							<table class="ui unstackable selectable table rcon-unselectable">
@@ -34,14 +34,12 @@
 									</tr>
 								</thead>
 								<tbody>
+									{% for player in players %}
 									<tr>
-										<td class="user_action" data-name="User 1" data-value="STEAM_1:1:12345678">User 1</td>
-										<td class="user_action" data-name="User 1" data-value="STEAM_1:1:12345678">STEAM_1:1:12345678</td>
+										<td class="user_action" data-name="{{ player.name }}" data-value="{{ player.value }}">{{ player.name }}</td>
+										<td class="user_action" data-name="{{ player.name }}" data-value="{{ player.value }}">{{ player.value }}</td>
 									</tr>
-									<tr>
-										<td class="user_action" data-name="User 2" data-value="STEAM_1:1:87654321">User 2</td>
-										<td class="user_action" data-name="User 2" data-value="STEAM_1:1:12345678">STEAM_1:1:87654321</td>
-									</tr>
+									{% endfor %}
 								</tbody>
 							</table>
 						</div>
@@ -50,10 +48,10 @@
 				<div class="ui card">
 					<div class="content">
 						<div class="header">
-							Map
+							Maps
 						</div>
 						<div class="meta">
-							<span class="category">buhriz_coop</span>
+							<span class="category">{{ maps_status }}</span>
 						</div>
 						<div class="description">
 							<table class="ui unstackable selectable table rcon-unselectable">
@@ -63,18 +61,11 @@
 									</tr>
 								</thead>
 								<tbody>
+									{% for map in maps %}
 									<tr>
-										<td class="map_action" data-name="Buhriz" data-value="buhriz_coop checkpoint">Buhriz</td>
+										<td class="map_action" data-name="{{ map.name }}" data-value="{{ map.value }}">{{ map.name }}</td>
 									</tr>
-									<tr>
-										<td class="map_action" data-name="Heights" data-value="heights_coop checkpoint">Heights</td>
-									</tr>
-									<tr>
-										<td class="map_action" data-name="Market" data-value="market_coop checkpoint">Market</td>
-									</tr>
-									<tr>
-										<td class="map_action" data-name="Verticality" data-value="verticality_coop checkpoint">Verticality</td>
-									</tr>
+									{% endfor %}
 								</tbody>
 							</table>
 						</div>
