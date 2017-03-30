@@ -11,7 +11,7 @@ app = flask.Flask(__name__)
 # Configure application
 app.config.update(
     DEBUG=True,
-    SECRET_KEY='diebitch'
+    SECRET_KEY='die, bitch!'
 )
 
 # Create session store
@@ -25,12 +25,10 @@ config = configobj.ConfigObj(__path__ + '/rcon-web.conf')
 
 @app.route('/')
 def index():
-
     if 'login' not in flask.session:
         return flask.redirect(flask.url_for('login'))
 
     title = 'Server name'
-
     players_status = '2 humans, 8 bots'
     players = [
         {
@@ -42,7 +40,6 @@ def index():
             'value': 'STEAM_1:1:87654321'
         }
     ]
-
     maps_status = 'buhriz_coop'
     maps = [{'name': name, 'value': config['maps'][name]['value']} for name in config['maps']]
 
