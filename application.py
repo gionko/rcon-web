@@ -1,6 +1,7 @@
 import configobj
 import flask
 import flask_kvsession
+import flask_seasurf
 import os
 import simplekv.memory
 
@@ -17,6 +18,9 @@ app.config.update(
 # Create session store
 store = simplekv.memory.DictStore()
 flask_kvsession.KVSessionExtension(store, app)
+
+# Initialize CSRF prevention
+flask_seasurf.SeaSurf(app)
 
 # Load configuration
 __path__ = os.path.dirname(os.path.realpath(__file__))
@@ -49,6 +53,7 @@ def index():
                                  players=players,
                                  maps_status=maps_status,
                                  maps=maps)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

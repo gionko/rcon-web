@@ -1,4 +1,5 @@
 ConfigObj
 Flask
 Flask-KVSession
+Flask-SeaSurf
 uWSGI

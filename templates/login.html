@@ -15,6 +15,7 @@
 
 		<div class="ui container">
 			<form class="login-box" method="post">
+				<input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
 				<div class="ui left icon fluid input">
 					<i class="lock icon"></i>
 					<input type="password" name="password" placeholder="Password">
