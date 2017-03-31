@@ -37,6 +37,15 @@ def secured(f):
     return decorator
 
 
+def secured_ajax(f):
+    @functools.wraps(f)
+    def decorator(*args, **kwargs):
+        if 'login' not in flask.session:
+            return flask.jsonify(ok=False, error="Not authorized")
+        return f(*args, **kwargs)
+    return decorator
+
+
 @app.route('/')
 @secured
 def index():
@@ -72,3 +81,21 @@ def login():
 
     flask.session.pop('login', None)
     return flask.render_template('login.html')
+
+
+@app.route('/ban')
+@secured_ajax
+def ban():
+    return flask.jsonify(ok=True, error=None)
+
+
+@app.route('/kick')
+@secured_ajax
+def kick():
+    return flask.jsonify(ok=True, error=None)
+
+
+@app.route('/map')
+@secured_ajax
+def map():
+    return flask.jsonify(ok=True, error=None)
