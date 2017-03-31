@@ -2,6 +2,7 @@ import configobj
 import flask
 import flask_kvsession
 import flask_seasurf
+import functools
 import os
 import simplekv.memory
 
@@ -27,11 +28,18 @@ __path__ = os.path.dirname(os.path.realpath(__file__))
 config = configobj.ConfigObj(__path__ + '/rcon-web.conf')
 
 
-@app.route('/')
-def index():
-    if 'login' not in flask.session:
-        return flask.redirect(flask.url_for('login'))
+def secured(f):
+    @functools.wraps(f)
+    def decorator(*args, **kwargs):
+        if 'login' not in flask.session:
+            return flask.redirect(flask.url_for('login'))
+        return f(*args, **kwargs)
+    return decorator
 
+
+@app.route('/')
+@secured
+def index():
     title = 'Server name'
     players_status = '2 humans, 8 bots'
     players = [
