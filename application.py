@@ -83,19 +83,29 @@ def login():
     return flask.render_template('login.html')
 
 
-@app.route('/ban')
+@app.route('/ban', methods=['POST'])
 @secured_ajax
 def ban():
+    data = flask.request.get_json()
+    # TODO: perform ban:
+    #       banid data['period'] data['player']
+    #       kickid data['player'] data['message']
     return flask.jsonify(ok=True, error=None)
 
 
-@app.route('/kick')
+@app.route('/kick', methods=['POST'])
 @secured_ajax
 def kick():
+    data = flask.request.get_json()
+    # TODO: perform kick
+    #       kickid data['player'] data['message']
     return flask.jsonify(ok=True, error=None)
 
 
-@app.route('/map')
+@app.route('/map', methods=['POST'])
 @secured_ajax
 def map():
+    data = flask.request.get_json()
+    # TODO: perform map change
+    #       changelevel data['map']
     return flask.jsonify(ok=True, error=None)
