@@ -5,6 +5,7 @@ import flask_seasurf
 import functools
 import os
 import simplekv.memory
+import valve.source.rcon
 
 
 # Create Flask application
@@ -26,6 +27,10 @@ flask_seasurf.SeaSurf(app)
 # Load configuration
 __path__ = os.path.dirname(os.path.realpath(__file__))
 config = configobj.ConfigObj(__path__ + '/rcon-web.conf')
+
+# Set global variables
+server = (config['server']['address'], int(config['server']['port']))
+password = config['server']['password']
 
 
 def secured(f):
@@ -87,9 +92,9 @@ def login():
 @secured_ajax
 def ban():
     data = flask.request.get_json()
-    # TODO: perform ban:
-    #       banid data['period'] data['player']
-    #       kickid data['player'] data['message']
+    with valve.source.rcon.RCON(server, password) as rcon:
+        rcon('banid {} {}'.format(data['period'], data['player']))
+        rcon('kickid {} {}'.format(data['player'], data['message']))
     return flask.jsonify(ok=True, error=None)
 
 
@@ -97,8 +102,8 @@ def ban():
 @secured_ajax
 def kick():
     data = flask.request.get_json()
-    # TODO: perform kick
-    #       kickid data['player'] data['message']
+    with valve.source.rcon.RCON(server, password) as rcon:
+        rcon('kickid {} {}'.format(data['player'], data['message']))
     return flask.jsonify(ok=True, error=None)
 
 
@@ -106,6 +111,6 @@ def kick():
 @secured_ajax
 def map():
     data = flask.request.get_json()
-    # TODO: perform map change
-    #       changelevel data['map']
+    with valve.source.rcon.RCON(server, password) as rcon:
+        rcon('changelevel {}'.format(data['map']))
     return flask.jsonify(ok=True, error=None)

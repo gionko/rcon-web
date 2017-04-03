@@ -2,4 +2,5 @@ ConfigObj
 Flask
 Flask-KVSession
 Flask-SeaSurf
+python-valve
 uWSGI
