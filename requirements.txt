@@ -2,5 +2,8 @@ ConfigObj
 Flask
 Flask-KVSession
 Flask-SeaSurf
-python-valve
 uWSGI
+
+# PIP version of python-valve is too old, and does have Unicode support
+# Download python-valve from Github instead
+git+https://github.com/Holiverh/python-valve@master#egg=python-valve

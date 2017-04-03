@@ -6,7 +6,7 @@ import functools
 import os
 import re
 import simplekv.memory
-import valve.source.rcon
+import valve.rcon
 
 
 # Create Flask application
@@ -32,6 +32,9 @@ config = configobj.ConfigObj(__path__ + '/rcon-web.conf')
 # Set global variables
 server = (config['server']['address'], int(config['server']['port']))
 password = config['server']['password']
+
+# Set default RCON encoding to UTF-8
+valve.rcon.RCONMessage.ENCODING = 'utf-8'
 
 
 def secured(f):
@@ -63,7 +66,7 @@ def regex_single(string, regex):
 @app.route('/')
 @secured
 def index():
-    with valve.source.rcon.RCON(server, password) as rcon:
+    with valve.rcon.RCON(server, password) as rcon:
         data = rcon('status')
 
     title = regex_single(data, 'hostname *: *(.*)')
@@ -103,7 +106,7 @@ def login():
 @secured_ajax
 def ban():
     data = flask.request.get_json()
-    with valve.source.rcon.RCON(server, password) as rcon:
+    with valve.rcon.RCON(server, password) as rcon:
         rcon('banid {} {}'.format(data['period'], data['player']))
         rcon('kickid {} {}'.format(data['player'], data['message']))
     return flask.jsonify(ok=True, error=None)
@@ -113,7 +116,7 @@ def ban():
 @secured_ajax
 def kick():
     data = flask.request.get_json()
-    with valve.source.rcon.RCON(server, password) as rcon:
+    with valve.rcon.RCON(server, password) as rcon:
         rcon('kickid {} {}'.format(data['player'], data['message']))
     return flask.jsonify(ok=True, error=None)
 
@@ -122,6 +125,6 @@ def kick():
 @secured_ajax
 def map():
     data = flask.request.get_json()
-    with valve.source.rcon.RCON(server, password) as rcon:
+    with valve.rcon.RCON(server, password) as rcon:
         rcon('changelevel {}'.format(data['map']))
     return flask.jsonify(ok=True, error=None)
