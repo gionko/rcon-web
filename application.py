@@ -4,6 +4,7 @@ import flask_kvsession
 import flask_seasurf
 import functools
 import os
+import re
 import simplekv.memory
 import valve.source.rcon
 
@@ -51,22 +52,32 @@ def secured_ajax(f):
     return decorator
 
 
+def regex_all(string, regex):
+    return re.findall(regex, string, re.IGNORECASE)
+
+
+def regex_single(string, regex):
+    return regex_all(string, regex)[0]
+
+
 @app.route('/')
 @secured
 def index():
-    title = 'Server name'
-    players_status = '2 humans, 8 bots'
-    players = [
-        {
-            'name': 'Player 1',
-            'value': 'STEAM_1:1:12345678'
-        },
-        {
-            'name': 'Player 2',
-            'value': 'STEAM_1:1:87654321'
+    with valve.source.rcon.RCON(server, password) as rcon:
+        data = rcon('status')
+
+    title = regex_single(data, 'hostname *: *(.*)')
+
+    players_status = regex_single(data, 'players *: *(\d* humans, \d* bots \(\d*/\d* max\)).*')
+    players = []
+    for name, value in regex_all(data, '# .*\d* .*\d* \"(.*)\" .*(STEAM.*?) .*'):
+        player = {
+            'name': name,
+            'value': value
         }
-    ]
-    maps_status = 'buhriz_coop'
+        players.append(player)
+
+    maps_status = regex_single(data, 'map *: *(.*)')
     maps = [{'name': name, 'value': config['maps'][name]['value']} for name in config['maps']]
 
     return flask.render_template('index.html',
