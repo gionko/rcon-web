@@ -101,7 +101,7 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if flask.request.method == 'POST':
-        if flask.request.form['password'] == config['server']['password']:
+        if flask.request.form['password'] == password:
             flask.session['login'] = True
             return flask.redirect(flask.url_for('index'))
 
