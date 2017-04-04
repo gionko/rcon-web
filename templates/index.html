@@ -30,16 +30,14 @@
 								<thead>
 									<tr>
 										<th>Name</th>
-										<th>Score</th>
-										<th>Online</th>
+										<th>Steam ID</th>
 									</tr>
 								</thead>
 								<tbody>
 									{% for player in players %}
 									<tr>
-										<td class="user_action" data-name="{{ player.name }}">{{ player.name }}</td>
-										<td class="user_action" data-name="{{ player.name }}">{{ player.score }}</td>
-										<td class="user_action" data-name="{{ player.name }}">{{ player.duration }}</td>
+										<td class="user_action" data-name="{{ player.name }}" data-value="{{ player.value }}">{{ player.name }}</td>
+										<td class="user_action" data-name="{{ player.name }}" data-value="{{ player.value }}">{{ player.value }}</td>
 									</tr>
 									{% endfor %}
 								</tbody>
