@@ -71,7 +71,7 @@ def index():
 
     title = info['server_name']
 
-    players_status = '{} players, {} bots'.format(info['player_count'], info['bot_count'])
+    players_status = '{}/{} players'.format(info['player_count'], info['max_players'])
     players = []
     for p in sorted(valve.source.a2s.ServerQuerier(server).players()['players'], key=lambda p: p['score'], reverse=True):
         m, s = divmod(p['duration'], 60)
