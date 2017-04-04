@@ -35,7 +35,6 @@ $('.rcon-button-ban-period').on('click', function(e) {
 // Open user dialog on user row click
 $('.user_action').click(function() {
 	name = $(this).data('name');
-	value = $(this).data('value');
 	$('.value-user').text(name);
 	$('.user_dialog').modal('show');
 });
@@ -67,14 +66,14 @@ $('.user_dialog').modal({
 	onApprove: function(e) {
 		if (e.hasClass('kick')) {
 			var data = {
-				player:  value,
+				player:  name,
 				message: $('.rcon-button-ban-msg.active').data('value')
 			};
 			ajax('kick', data);
 		} else
 		if (e.hasClass('ban')) {
 			var data = {
-				player:  value,
+				player:  name,
 				message: $('.rcon-button-ban-msg.active').data('value'),
 				period:  $('.rcon-button-ban-period.active').data('value')
 			};

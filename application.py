@@ -6,6 +6,7 @@ import functools
 import os
 import re
 import simplekv.memory
+import valve.source.a2s
 import valve.rcon
 
 
@@ -66,21 +67,27 @@ def regex_single(string, regex):
 @app.route('/')
 @secured
 def index():
-    with valve.rcon.RCON(server, password) as rcon:
-        data = rcon('status')
+    info = valve.source.a2s.ServerQuerier(server).info()
 
-    title = regex_single(data, 'hostname *: *(.*)')
+    title = info['server_name']
 
-    players_status = regex_single(data, 'players *: *(\d* humans, \d* bots \(\d*/\d* max\)).*')
+    players_status = '{} players, {} bots'.format(info['player_count'], info['bot_count'])
     players = []
-    for name, value in regex_all(data, '# .*\d* .*\d* \"(.*)\" .*(STEAM.*?) .*'):
+    for p in sorted(valve.source.a2s.ServerQuerier(server).players()['players'], key=lambda p: p['score'], reverse=True):
+        m, s = divmod(p['duration'], 60)
+        h, m = divmod(m, 60)
+        if h > 0:
+            duration = '{:1.0f}:{:02.0f}:{:02.0f}'.format(h, m, s)
+        else:
+            duration = '{:02.0f}:{:02.0f}'.format(m, s)
         player = {
-            'name': name,
-            'value': value
+            'name': p['name'],
+            'score': p['score'],
+            'duration': duration
         }
         players.append(player)
 
-    maps_status = regex_single(data, 'map *: *(.*)')
+    maps_status = info['map']
     maps = [{'name': name, 'value': config['maps'][name]['value']} for name in config['maps']]
 
     return flask.render_template('index.html',
@@ -106,9 +113,12 @@ def login():
 @secured_ajax
 def ban():
     data = flask.request.get_json()
+    # TODO: rcon status, find steam id by matching the player name in data['player']
+    '''
     with valve.rcon.RCON(server, password) as rcon:
         rcon('banid {} {}'.format(data['period'], data['player']))
         rcon('kickid {} {}'.format(data['player'], data['message']))
+    '''
     return flask.jsonify(ok=True, error=None)
 
 
@@ -116,8 +126,11 @@ def ban():
 @secured_ajax
 def kick():
     data = flask.request.get_json()
+    # TODO: rcon status, find steam id by matching the player name in data['player']
+    '''
     with valve.rcon.RCON(server, password) as rcon:
         rcon('kickid {} {}'.format(data['player'], data['message']))
+    '''
     return flask.jsonify(ok=True, error=None)
 
 
