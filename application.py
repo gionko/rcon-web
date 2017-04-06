@@ -73,10 +73,12 @@ def index():
 
     players_status = regex_single(data, 'players *: *(\d* humans, \d* bots \(\d*/\d* max\)).*')
     players = []
-    for name, value in regex_all(data, '# .*\d* .*\d* \"(.*)\" .*(STEAM.*?) .*'):
+    for name, steamid, connected, ping in regex_all(data, '# .*\d* .*\d* \"(.*)\" .*(STEAM.*?) (\d*:?\d*:\d*) (\d*) .*'):
         player = {
-            'name': name,
-            'value': value
+            'name':      name,
+            'steamid':   steamid,
+            'connected': connected,
+            'ping':      ping
         }
         players.append(player)
 
