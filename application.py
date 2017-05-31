@@ -106,7 +106,7 @@ def login():
 
 @app.route('/ban', methods=['POST'])
 @secured_ajax
-def ban():
+def ajax_ban():
     data = flask.request.get_json()
     with valve.rcon.RCON(server, password) as rcon:
         rcon('banid {} {}'.format(data['period'], data['player']))
@@ -114,9 +114,18 @@ def ban():
     return flask.jsonify(ok=True, error=None)
 
 
+@app.route('/config', methods=['POST'])
+@secured_ajax
+def ajax_config():
+    data = flask.request.get_json()
+    with valve.rcon.RCON(server, password) as rcon:
+        rcon('{} {}'.format(data['name'], data['value']))
+    return flask.jsonify(ok=True, error=None)
+
+
 @app.route('/kick', methods=['POST'])
 @secured_ajax
-def kick():
+def ajax_kick():
     data = flask.request.get_json()
     with valve.rcon.RCON(server, password) as rcon:
         rcon('kickid {} {}'.format(data['player'], data['message']))
@@ -125,7 +134,7 @@ def kick():
 
 @app.route('/map', methods=['POST'])
 @secured_ajax
-def map():
+def ajax_map():
     data = flask.request.get_json()
     with valve.rcon.RCON(server, password) as rcon:
         rcon('changelevel {}'.format(data['map']))

@@ -16,8 +16,8 @@ $('.rcon-button-ban-msg').on('click', function(e) {
 	$(this).toggleClass('active');
 	// Enable kick/ban buttons
 	$('.kick.button').removeClass('disabled');
-	var message_selected = $('.rcon-button-ban-period.active').length;
-	if (message_selected > 0) {
+	var period_selected = $('.rcon-button-ban-period.active').length;
+	if (period_selected > 0) {
 		$('.ban.button').removeClass('disabled');
 	}
 });
@@ -30,6 +30,38 @@ $('.rcon-button-ban-period').on('click', function(e) {
 	if (message_selected > 0) {
 		$('.ban.button').removeClass('disabled');
 	}
+});
+
+// Config dialog button callbacks
+$('.rcon-button-config-count').on('click', function(e) {
+	// Keep only one count selected
+	$('.rcon-button-config-count').removeClass('active');
+	$(this).toggleClass('active');
+	// Save data
+	name = $(this).data('name');
+	value = $(this).data('value');
+	// Enable apply button
+	$('.config.button').removeClass('disabled');
+});
+$('.rcon-button-config-damage').on('click', function(e) {
+	// Keep only one damage selected
+	$('.rcon-button-config-damage').removeClass('active');
+	$(this).toggleClass('active');
+	// Save data
+	name = $(this).data('name');
+	value = $(this).data('value');
+	// Enable apply button
+	$('.config.button').removeClass('disabled');
+});
+$('.rcon-button-config-difficulty').on('click', function(e) {
+	// Keep only one difficulty selected
+	$('.rcon-button-config-difficulty').removeClass('active');
+	$(this).toggleClass('active');
+	// Save data
+	name = $(this).data('name');
+	value = $(this).data('value');
+	// Enable apply button
+	$('.config.button').removeClass('disabled');
 });
 
 // Open user dialog on user row click
@@ -46,6 +78,23 @@ $('.map_action').click(function() {
 	value = $(this).data('value');
 	$('.value-map').text(name);
 	$('.map_dialog').modal('show');
+});
+
+// Open config dialog on config row click
+$('.config_count_action').click(function() {
+	name = $(this).data('name');
+	value = $(this).data('value');
+	$('.config_count_dialog').modal('show');
+});
+$('.config_damage_action').click(function() {
+	name = $(this).data('name');
+	value = $(this).data('value');
+	$('.config_damage_dialog').modal('show');
+});
+$('.config_difficulty_action').click(function() {
+	name = $(this).data('name');
+	value = $(this).data('value');
+	$('.config_difficulty_dialog').modal('show');
 });
 
 // Ajax function to request server action
@@ -98,10 +147,33 @@ $('.user_dialog').modal({
 // Configure map dialog callbacks
 $('.map_dialog').modal({
 	onApprove: function(e) {
-		location.reload(true);
 		var data = {
 			map: value
 		};
 		ajax('map', data);
+	}
+});
+
+// Configure config dialog callbacks
+$('.config_dialog').modal({
+	onApprove: function(e) {
+		// location.reload(true);
+		var data = {
+			name: name,
+			value: value
+		};
+		ajax('config', data);
+		// Reset button states
+		$('.config.button').addClass('disabled');
+		$('.rcon-button-config-count').removeClass('active');
+		$('.rcon-button-config-damage').removeClass('active');
+		$('.rcon-button-config-difficulty').removeClass('active');
+	},
+	onDeny: function(e) {
+		// Reset button states
+		$('.config.button').addClass('disabled');
+		$('.rcon-button-config-count').removeClass('active');
+		$('.rcon-button-config-damage').removeClass('active');
+		$('.rcon-button-config-difficulty').removeClass('active');
 	}
 });

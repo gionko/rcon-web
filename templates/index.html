@@ -73,6 +73,36 @@
 						</div>
 					</div>
 				</div>
+				<div class="ui card">
+					<div class="content">
+						<div class="header">
+							Configuration
+						</div>
+						<div class="meta">
+							<span class="category">{{ config_status }}</span>
+						</div>
+						<div class="description">
+							<table class="ui unstackable selectable table rcon-unselectable">
+								<thead>
+									<tr>
+										<th>Option</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="config_count_action">Count</td>
+									</tr>
+									<tr>
+										<td class="config_damage_action">Damage</td>
+									</tr>
+									<tr>
+										<td class="config_difficulty_action">Difficulty</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -136,6 +166,94 @@
 				<div class="ui red ok inverted button">
 					<i class="checkmark icon"></i>
 					Yes
+				</div>
+			</div>
+		</div>
+
+		<div class="ui small basic modal config_dialog config_count_dialog">
+			<div class="ui icon header">
+				<i class="users icon"></i>
+				Set bot count
+			</div>
+			<div class="content rcon-center">
+				<p>Are you sure you want to set bot count?</p>
+				<p>
+					Count:
+					<div class="five ui buttons">
+						<div class="ui inverted button rcon-button-config-count" data-name="ins_bot_count_checkpoint" data-value="8">8</div>
+						<div class="ui inverted button rcon-button-config-count" data-name="ins_bot_count_checkpoint" data-value="12">12</div>
+						<div class="ui inverted button rcon-button-config-count" data-name="ins_bot_count_checkpoint" data-value="16">16</div>
+						<div class="ui inverted button rcon-button-config-count" data-name="ins_bot_count_checkpoint" data-value="20">20</div>
+						<div class="ui inverted button rcon-button-config-count" data-name="ins_bot_count_checkpoint" data-value="24">24</div>
+					</div>
+				</p>
+			</div>
+			<div class="actions rcon-center">
+				<div class="ui green cancel inverted button">
+					<i class="remove icon"></i>
+					No
+				</div>
+				<div class="ui red ok config inverted disabled button">
+					<i class="checkmark icon"></i>
+					Apply
+				</div>
+			</div>
+		</div>
+
+		<div class="ui small basic modal config_dialog config_damage_dialog">
+			<div class="ui icon header">
+				<i class="heartbeat icon"></i>
+				Set bot damage
+			</div>
+			<div class="content rcon-center">
+				<p>Are you sure you want to set bot damage?</p>
+				<p>
+					Damage:
+					<div class="four ui buttons">
+						<div class="ui inverted button rcon-button-config-damage" data-name="bot_damage" data-value="0.4">0.4</div>
+						<div class="ui inverted button rcon-button-config-damage" data-name="bot_damage" data-value="0.6">0.6</div>
+						<div class="ui inverted button rcon-button-config-damage" data-name="bot_damage" data-value="0.8">0.8</div>
+						<div class="ui inverted button rcon-button-config-damage" data-name="bot_damage" data-value="1.0">1.0</div>
+					</div>
+				</p>
+			</div>
+			<div class="actions rcon-center">
+				<div class="ui green cancel inverted button">
+					<i class="remove icon"></i>
+					No
+				</div>
+				<div class="ui red ok config inverted disabled button">
+					<i class="checkmark icon"></i>
+					Apply
+				</div>
+			</div>
+		</div>
+
+		<div class="ui small basic modal config_dialog config_difficulty_dialog">
+			<div class="ui icon header">
+				<i class="spy icon"></i>
+				Set bot difficulty
+			</div>
+			<div class="content rcon-center">
+				<p>Are you sure you want to set bot difficulty?</p>
+				<p>
+					Difficulty:
+					<div class="four ui buttons">
+						<div class="ui inverted button rcon-button-config-difficulty" data-name="ins_bot_difficulty" data-value="0">0</div>
+						<div class="ui inverted button rcon-button-config-difficulty" data-name="ins_bot_difficulty" data-value="1">1</div>
+						<div class="ui inverted button rcon-button-config-difficulty" data-name="ins_bot_difficulty" data-value="2">2</div>
+						<div class="ui inverted button rcon-button-config-difficulty" data-name="ins_bot_difficulty" data-value="3">3</div>
+					</div>
+				</p>
+			</div>
+			<div class="actions rcon-center">
+				<div class="ui green cancel inverted button">
+					<i class="remove icon"></i>
+					No
+				</div>
+				<div class="ui red ok config inverted disabled button">
+					<i class="checkmark icon"></i>
+					Apply
 				</div>
 			</div>
 		</div>
