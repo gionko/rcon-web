@@ -66,6 +66,9 @@ def regex_single(string, regex):
 @app.route('/')
 @secured
 def index():
+
+    # Get status
+
     with valve.rcon.RCON(server, password) as rcon:
         data = rcon('status')
 
@@ -85,12 +88,29 @@ def index():
     maps_status = regex_single(data, 'map *: *(.*)')
     maps = [{'name': name, 'value': config['maps'][name]['value']} for name in config['maps']]
 
+    # Get configuration
+
+    with valve.rcon.RCON(server, password) as rcon:
+        data = rcon('bot_damage')
+
+    config_damage = regex_single(data, '.*= *\"([\d.]*)\".*')
+
+    with valve.rcon.RCON(server, password) as rcon:
+        data = rcon('ins_bot_difficulty')
+
+    config_difficulty = regex_single(data, '.*= *\"([\d.]*)\".*')
+
+    config_status = 'damage {:.3}, difficulty {}'.format(config_damage, config_difficulty)
+
+    # Render template
+
     return flask.render_template('index.html',
                                  title=title,
                                  players_status=players_status,
                                  players=players,
                                  maps_status=maps_status,
-                                 maps=maps)
+                                 maps=maps,
+                                 config_status=config_status)
 
 
 @app.route('/login', methods=['GET', 'POST'])
