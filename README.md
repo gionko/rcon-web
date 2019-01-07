@@ -22,24 +22,24 @@ All screenshots are made from an actual phone, Android 8.0 on Samsung A5 2017.
 
 Login screen:
 
-<img style="border:1px solid #404040;" src="https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/login.png" width="256">
+<img src="https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/login.png" width="256">
 
 Main screen:
 
 <p float="left">
-  <img style="border:1px solid #404040;" src="https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/main-players.png" width="256">
-  <img style="border:1px solid #404040;" src="https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/main-maps.png" width="256">
-  <img style="border:1px solid #404040;" src="https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/main-config.png" width="256">
+  <img src="https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/main-players.png" width="256">
+  <img src="https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/main-maps.png" width="256">
+  <img src="https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/main-config.png" width="256">
 </p>
 
 Actions:
 
 <p float="left">
-  <img style="border:1px solid #404040;" src="https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/click-user.png" width="256">
-  <img style="border:1px solid #404040;" src="https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/click-map.png" width="256">
-  <img style="border:1px solid #404040;" src="https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/click-bot-count.png" width="256">
-  <img style="border:1px solid #404040;" src="https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/click-bot-damage.png" width="256">
-  <img style="border:1px solid #404040;" src="https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/click-bot-difficulty.png" width="256">
+  <img src="https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/click-user.png" width="256">
+  <img src="https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/click-map.png" width="256">
+  <img src="https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/click-bot-count.png" width="256">
+  <img src="https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/click-bot-damage.png" width="256">
+  <img src="https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/click-bot-difficulty.png" width="256">
 </p>
 
 ## Downloads
