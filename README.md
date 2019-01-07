@@ -51,3 +51,10 @@ Latest release is available [here](https://github.com/dieselburner/rcon-web/rele
 Installation instructions are located in a separate documentation file, [here](https://github.com/dieselburner/rcon-web/blob/master/INSTALL.md). Configuring `rcon-web` for external access is not covered here, since this often is quite individual topic. Hopefully, Internet is full of information about port forwarding, CNAME's, dynamic DNS'es, etc.
 
 ## Configuration
+
+There are two configuration files that needs to be configured.
+
+`uwsgi.ini` contains web application specific configuration, and it might need to be adjusted for your environment, like paths or user/group id's.
+
+`rcon-web.conf` contains game server configuration. Game server address and password goes here. Please note, your login password is the same as in this configuration file.
+Additionally, it is possible to fine-tune couple of options via this configuration file, in particular, prefix for user ban/kick messages, and provide readable map names.
