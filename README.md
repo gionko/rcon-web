@@ -22,21 +22,21 @@ All screenshots are made from an actual phone, Android 8.0 on Samsung A5 2017.
 
 Login screen:
 
-![Login screen](https://raw.githubusercontent.com/dieselburner/rcon-web/master/documenation/images/login.png)
+![Login screen](https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/login.png)
 
 Main screen:
 
-![Players](https://raw.githubusercontent.com/dieselburner/rcon-web/master/documenation/images/main-players.png)
-![Maps](https://raw.githubusercontent.com/dieselburner/rcon-web/master/documenation/images/main-maps.png)
-![Config](https://raw.githubusercontent.com/dieselburner/rcon-web/master/documenation/images/main-config.png)
+![Players](https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/main-players.png)
+![Maps](https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/main-maps.png)
+![Config](https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/main-config.png)
 
 Actions:
 
-![User](https://raw.githubusercontent.com/dieselburner/rcon-web/master/documenation/images/click-user.png)
-![Map](https://raw.githubusercontent.com/dieselburner/rcon-web/master/documenation/images/click-map.png)
-![Bot count](https://raw.githubusercontent.com/dieselburner/rcon-web/master/documenation/images/click-bot-count.png)
-![Bot damage](https://raw.githubusercontent.com/dieselburner/rcon-web/master/documenation/images/click-bot-damage.png)
-![Bot difficulty](https://raw.githubusercontent.com/dieselburner/rcon-web/master/documenation/images/click-bot-difficulty.png)
+![User](https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/click-user.png)
+![Map](https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/click-map.png)
+![Bot count](https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/click-bot-count.png)
+![Bot damage](https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/click-bot-damage.png)
+![Bot difficulty](https://raw.githubusercontent.com/dieselburner/rcon-web/master/documentation/images/click-bot-difficulty.png)
 
 ## Downloads
 
