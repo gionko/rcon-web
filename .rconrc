@@ -1,0 +1,7 @@
+{
+	"api_port"        : 8888,
+
+	"server_address"  : "server.example.com",
+	"server_port"     : 27015,
+	"server_password" : "password"
+}
