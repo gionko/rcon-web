@@ -101,10 +101,12 @@ func main() {
 	group.StaticFile("/robots.txt", "static/robots.txt")
 	log.Debug("Assets initialized")
 
-	// Set routes
+	// Set API routes
 
-	group.GET("/api/users", RouteAPIUsers)
-	log.Debug("Routes set")
+	group.GET   ("/api/users",     RouteAPIUsers)
+	group.PUT   ("/api/users/:id", RouteAPIUsersBan)
+	group.DELETE("/api/users/:id", RouteAPIUsersKick)
+	log.Debug("API routes set")
 
 	// Start the server
 

@@ -56,41 +56,9 @@ func get_scores() ([]User, error) {
 		users = append(users, u)
 	}
 
+	// Done
+
 	return users, nil
-}
-
-func get_status() ([]string, error) {
-	var status []string
-
-	// Get RCON `status` command response
-
-	req, err := rcon.Dial(fmt.Sprintf("%s:%d", config.ServerAddress, config.ServerPort))
-	if err != nil {
-		return nil, fmt.Errorf("RCON dial error: %+v", err)
-	}
-	defer req.Close()
-
-	err = req.Authenticate(config.ServerPassword)
-	if err != nil {
-		return nil, fmt.Errorf("RCON authentication error: %+v", err)
-	}
-
-	resp, err := req.Execute("status")
-	if err != nil {
-		return nil, fmt.Errorf("RCON `status` command error: %+v", err)
-	}
-
-	// Convert response to array of strings
-
-	scanner := bufio.NewScanner(strings.NewReader(resp.Body))
-	for scanner.Scan() {
-		status = append(status, scanner.Text())
-	}
-	if err := scanner.Err(); err != nil {
-		return nil, fmt.Errorf("RCON server response parsing error: %+v", err)
-	}
-
-	return status, nil
 }
 
 func get_users(status []string) ([]User, error) {
@@ -113,7 +81,6 @@ func get_users(status []string) ([]User, error) {
 	// Extract user info from status
 
 	for _, line := range status {
-		// re := regexp.MustCompile("(?i).*?\"(.*?)\" (.*?) (.*?) (.*?) (.*?) (.*?) (.*?) (.*?):(.*?)$")
 		re := regexp.MustCompile("(?i).*?\"(.*?)\" +(.*?) +(.*?) +(.*?) +(.*?) +(.*?) +(.*?) +(.*?):(.*?)$")
 		match := re.FindStringSubmatch(line)
 
@@ -181,6 +148,58 @@ func get_users(status []string) ([]User, error) {
 		}
 	}
 
+	// Done
+
 	return users, nil
 }
 
+func rcon_command(command string, check string) ([]string, error) {
+	var status []string
+
+	// Get RCON command response
+
+	req, err := rcon.Dial(fmt.Sprintf("%s:%d", config.ServerAddress, config.ServerPort))
+	if err != nil {
+		return nil, fmt.Errorf("RCON dial error: %+v", err)
+	}
+	defer req.Close()
+
+	err = req.Authenticate(config.ServerPassword)
+	if err != nil {
+		return nil, fmt.Errorf("RCON authentication error: %+v", err)
+	}
+
+	resp, err := req.Execute(command)
+	if err != nil {
+		return nil, fmt.Errorf("RCON `%s` command error: %+v", command, err)
+	}
+
+	// Convert response to array of strings
+
+	scanner := bufio.NewScanner(strings.NewReader(resp.Body))
+	for scanner.Scan() {
+		status = append(status, scanner.Text())
+	}
+	if err := scanner.Err(); err != nil {
+		return nil, fmt.Errorf("RCON response parsing error: %+v", err)
+	}
+
+	// Check for empty response
+
+	if len(status) == 0 {
+		return nil, fmt.Errorf("RCON response is empty")
+	}
+
+	// Check command execution via regex on first line of response
+
+	re := regexp.MustCompile(check)
+	match := re.FindStringSubmatch(status[0])
+
+	if match == nil {
+		return nil, fmt.Errorf("RCON response check failed: %s", status[0])
+	}
+
+	// Done
+
+	return status, nil
+}
