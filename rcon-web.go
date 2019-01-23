@@ -10,7 +10,6 @@ import (
 	"os/user"
 
 	"github.com/gin-gonic/gin"
-	"github.com/rumblefrog/go-a2s"
 )
 
 const version = "1.0.0"
@@ -25,12 +24,10 @@ func usage() {
 }
 
 func main() {
-	arg_config := new(string)
-
 	// Parse command line arguments
 
 	arg_version := flag.Bool(  "version", false, "Show version information")
-	arg_config   = flag.String("config",  "",    "Config file")
+	arg_config  := flag.String("config",  "",    "Config file")
 	flag.Parse()
 
 	// Set config filename if it was not provided
