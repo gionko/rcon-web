@@ -104,7 +104,7 @@ func get_users(status []string) ([]User, error) {
 	}
 
 
-	geo, err := geoip2.Open("GeoLite2-City.mmdb")
+	geo, err := geoip2.Open(config.GeoIP2_DB)
 	if err != nil {
 		return nil, fmt.Errorf("Error opening GeoIP2 database: %+v", err)
 	}

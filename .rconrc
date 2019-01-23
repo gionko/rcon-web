@@ -1,5 +1,6 @@
 {
 	"api_port"        : 8888,
+	"geoip2_db"       : "/path/to/GeoLite2-City.mmdb",
 
 	"server_address"  : "server.example.com",
 	"server_port"     : 27015,
