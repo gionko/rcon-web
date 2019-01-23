@@ -24,44 +24,7 @@ func usage() {
 	flag.PrintDefaults()
 }
 
-func a2s_test() {
-	client, err := a2s.NewClient("46.183.163.222:27015")
-	if err != nil {
-		log.Infof("Error: %+v", err)
-		os.Exit(1)
-	}
-	defer client.Close()
-
-	info, err := client.QueryInfo()
-	if err != nil {
-		log.Infof("Error: %+v", err)
-		os.Exit(1)
-	}
-	log.Infof("ServerInfo: %+v", info)
-	log.Infof("\tExtendedServerInfo: %+v", info.ExtendedServerInfo)
-
-	player, err := client.QueryPlayer()
-	if err != nil {
-		log.Infof("Error: %+v", err)
-		os.Exit(1)
-	}
-	fmt.Printf("PlayerInfo: %+v", player)
-	for i, p := range player.Players {
-		log.Infof("\tPlayer %d: %+v", i, p)
-	}
-
-	rules, err := client.QueryRules()
-	if err != nil {
-		log.Infof("Error: %+v", err)
-		os.Exit(1)
-	}
-	log.Infof("Rules: %+v", rules)
-}
-
 func main() {
-	// TODO: remove me
-	a2s_test()
-
 	arg_config := new(string)
 
 	// Parse command line arguments
