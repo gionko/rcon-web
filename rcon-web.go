@@ -143,7 +143,7 @@ func main() {
 
 	// Set routes
 
-	group.GET("/users", RouteUsers)
+	group.GET("/api/users", RouteAPIUsers)
 	log.Debug("Routes set")
 
 	// Start the server

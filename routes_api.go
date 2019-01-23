@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RouteUsers(c *gin.Context) {
+func RouteAPIUsers(c *gin.Context) {
 	status, err := get_status()
 	if err != nil {
 		log.Errorf("Could not obtain `RCON status response: %+v", err)
