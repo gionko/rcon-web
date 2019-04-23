@@ -1,0 +1,55 @@
+{{ define "title"}}Login{{ end }}
+{{ define "description"}}Authenticate yourself{{ end }}
+
+{{ define "css" }}
+{{ end }}
+
+{{ define "content" }}
+	<div class="login-box display-none">
+		<div class="login-box-body">
+			<p class="login-box-msg">Enter RCON password:</p>
+			<form id="login-form">
+				<div class="form-group has-feedback">
+					<input id="login-password" type="password" class="form-control" placeholder="Password">
+					<span class="glyphicon glyphicon-lock form-control-feedback"></span>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{{ end }}
+
+{{ define "scripts" }}
+	<script>
+		$("#login-form").submit(function(event) {
+			event.preventDefault();
+
+			var data = {
+				password: $('#login-password').val()
+			};
+
+			$.ajax({
+				url: api_url + '/login',
+				type: 'POST',
+				data: JSON.stringify(data)
+			})
+			.done(function(data, status, jqxhr){
+				$(location).attr('href', site_url)
+			})
+			.fail(function(jqxhr, status, error){
+				console.log(error);
+			});
+		});
+
+		$(window).on('resize', () => {
+			$(".login-box").center(false);
+		});
+		$(".login-box").center(false);
+		$(".login-box").show();
+		$('#login-password').focus();
+	</script>
+{{ end }}

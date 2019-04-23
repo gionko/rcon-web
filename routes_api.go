@@ -4,8 +4,65 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/madcitygg/rcon"
 )
+
+func RouteAPILogin(c *gin.Context) {
+	// Bind request body
+
+	type Login struct {
+		Password string `json:"password"`
+	}
+	login := Login{}
+
+	err := c.ShouldBind(&login)
+	if err != nil {
+		log.Errorf("Could not bind data: %+v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Try to authenticate with provided password
+
+	req, err := rcon.Dial(fmt.Sprintf("%s:%d", config.ServerAddress, config.ServerPort))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	defer req.Close()
+
+	err = req.Authenticate(login.Password)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Login successful
+
+	session := sessions.Default(c)
+	session.Set("logged", true)
+	session.Set("password", login.Password)
+	session.Save()
+
+	// Done
+
+	c.JSON(http.StatusNoContent, nil)
+}
+
+func RouteAPILogout(c *gin.Context) {
+
+	// Login successful
+
+	session := sessions.Default(c)
+	session.Clear()
+	session.Save()
+
+	// Done
+
+	c.JSON(http.StatusNoContent, nil)
+}
 
 func RouteAPIUsers(c *gin.Context) {
 	status, err := rcon_command("status", "hostname: +(.*?)$")

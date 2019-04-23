@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	{{/* Tell the browser to be responsive to screen width */}}
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<link href="{{ .site.Static }}/favicon.ico" rel="shortcut icon" type="image/ico">
+	<link href="{{ .site.Static }}/favicon.png" rel="apple-touch-icon" type="image/png">
+
+	<title>{{ .site.Title }} | {{ template "title" . }}</title>
+
+	{{/* Bootstrap */}}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css"
+	      crossorigin="anonymous" integrity="sha256-fmMNkMcjSw3xcp9iuPnku/ryk9kaWgrEbfJfKmdZ45o=">
+	{{/* Font Awesome */}}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
+	      crossorigin="anonymous" integrity="sha256-NuCn4IvuZXdBaFKJOAcsU2Q3ZpwbdFisd5dux4jkQ5w=">
+	{{/* Ionicons */}}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.css"
+	      crossorigin="anonymous" integrity="sha256-D3+gw6JE4hEJ9pnCs+BglSfZ2yG5gF+JGdPJ/v183fo=">
+	{{/* AdminLTE */}}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.3.11/css/AdminLTE.css"
+	      crossorigin="anonymous" integrity="sha256-T9nUJMQHCEMkmoCqZanmqNEdKz26MI0oOC8u2pbaJw4=">
+	{{/* Global */}}
+	<link rel="stylesheet" href="{{ .site.Static }}/skin.css">
+	<link rel="stylesheet" href="{{ .site.Static }}/common.css">
+	{{/* Local */}}
+	{{ template "css" . }}
+
+	{{/* HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries */}}
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+</head>
+<body class="fixed skin-nostromo sidebar-mini">
+
+	{{/* Site wrapper */}}
+	<div class="wrapper">
+
+		{{/* Header */}}
+		{{ if .logged }}
+		<header class="main-header">
+			{{/* Header logo */}}
+			<a href="{{ .site.URL }}" class="logo">
+				{{/* mini logo for sidebar mini 50x50 pixels */}}
+				<span class="logo-mini"><b>R</b></span>
+				{{/* logo for regular state */}}
+				<span class="logo-lg"><b>{{ .site.Title }}</b></span>
+			</a>
+			{{/* Header navbar */}}
+			<nav class="navbar navbar-static-top">
+				{{/* Sidebar toggle button */}}
+				<a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a href="{{ .site.URL }}" class="logo logo-mobile">
+					{{/* logo for mobile devices */}}
+					<span class="logo-lg"><b>{{ .site.Title }}</b></span>
+				</a>
+				<div class="navbar-custom-menu">
+					<ul class="nav navbar-nav">
+						<!--
+						{{/* Notifications */}}
+						<li class="dropdown notifications-menu">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<i class="fa fa-bell-o"></i>
+								<span class="label label-warning">1</span>
+							</a>
+							<ul class="dropdown-menu">
+								<li class="header">You have 1 notification</li>
+								<li>
+									{{/* inner menu: contains the actual data */}}
+									<ul class="menu">
+										{{/* notification item */}}
+										<li>
+											<a href="{{ .site.URL }}/notification/1">
+												<i class="fa fa-users text-aqua"></i> 5 new members joined today
+											</a>
+										</li>
+										{{/* end notification item */}}
+									</ul>
+								</li>
+								<li class="footer"><a href="{{ .site.URL }}/notifications">View all</a></li>
+							</ul>
+						</li>
+						{{/* Tasks */}}
+						<li class="dropdown tasks-menu">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<i class="fa fa-flag-o"></i>
+								<span class="label label-danger">1</span>
+							</a>
+							<ul class="dropdown-menu">
+								<li class="header">You have 1 task</li>
+								<li>
+									{{/* inner menu: contains the actual data */}}
+									<ul class="menu">
+										{{/* task item */}}
+										<li>
+											<a href="{{ .site.URL }}/task/1">
+												<h3>
+													Design some buttons
+													<small class="pull-right">20%</small>
+												</h3>
+												<div class="progress xs">
+													<div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar"
+													     aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+														<span class="sr-only">20% Complete</span>
+													</div>
+												</div>
+											</a>
+										</li>
+										{{/* end task item */}}
+									</ul>
+								</li>
+								<li class="footer">
+									<a href="{{ .site.URL }}/tasks">View all</a>
+								</li>
+							</ul>
+						</li>
+						-->
+						{{/* Logout button */}}
+						<li>
+							<a id="logout"><i class="fa fa-sign-out"></i></a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+		</header>
+		{{ end }}
+
+		{{/* Left side column, contains the logo and sidebar */}}
+		{{ if .logged }}
+		<aside class="main-sidebar">
+			{{/* Sidebar */}}
+			<section class="sidebar">
+				<!--
+				{{/* Sidebar user panel */}}
+				<div class="user-panel">
+					<div class="pull-left image">
+						<img src="{{ .user.Photo }}" class="img-circle" alt="User Image">
+					</div>
+					<div class="pull-left info">
+						<p>{{ .user.Name }}</p>
+						<small>{{ if .user.Position }}{{ .user.Position }}{{ else }}User{{ end }}</small>
+					</div>
+				</div>
+				{{/* search form */}}
+				<form method="get" class="sidebar-form">
+					<div class="input-group">
+						<input type="text" name="q" class="form-control" placeholder="Search...">
+						<span class="input-group-btn">
+							<button type="submit" id="search-btn" class="btn btn-flat">
+								<i class="fa fa-search"></i>
+							</button>
+						</span>
+					</div>
+				</form>
+				-->
+				{{/* sidebar menu */}}
+				<ul class="sidebar-menu">
+					<li class="{{ if eq .section "dashboard" }}active{{ end }}">
+						<a href="{{ .site.URL }}">
+							<i class="fa fa-dashboard"></i> <span>Dashboard</span>
+						</a>
+					</li>
+					<li class="{{ if eq .section "bots" }}active{{ end }}">
+						<a href="{{ .site.URL }}/bots">
+							<i class="fa fa-laptop"></i> <span>Bots</span>
+						</a>
+					</li>
+					<li class="{{ if eq .section "maps" }}active{{ end }}">
+						<a href="{{ .site.URL }}/maps">
+							<i class="fa fa-map"></i> <span>Maps</span>
+						</a>
+					</li>
+					<li class="{{ if eq .section "players" }}active{{ end }}">
+						<a href="{{ .site.URL }}/players">
+							<i class="fa fa-user"></i> <span>Players</span>
+						</a>
+					</li>
+				</ul>
+			</section>
+		</aside>
+		{{ end }}
+
+		{{/* Right side column, contains page content */}}
+		<aside class="content-wrapper {{ if not .logged }}no-margin-left no-padding-top{{ end }}">
+			{{/* Content header */}}
+			<section class="content-header">
+				<h1>
+					{{ .site.Title }}
+					<small>{{ .site.Description }}</small>
+				</h1>
+				{{ if .logged }}
+				<ol class="breadcrumb">
+					<li><a href="{{ .site.URL }}"><i class="fa fa-home"></i> Home</a></li>
+					{{ block "breadcrumb" . }}
+						<li class="active"><i class="fa fa-dashboard"></i> {{ template "title" . }}</li>
+					{{ end }}
+				</ol>
+				{{ end }}
+			</section>
+
+			{{/* Content */}}
+			<section class="content">
+				{{ template "content" . }}
+			</section>
+		</aside>
+
+		{{/* Footer */}}
+		<!--
+		<footer class="main-footer {{ if not .logged }}no-margin-left{{ end }}">
+			<div class="pull-right hidden-xs">
+				All rights reserved
+			</div>
+			<strong>Copyright</strong>
+		</footer>
+		-->
+	</div>
+
+	{{/* Configure AdminLTE */}}
+	<script>
+		var AdminLTEOptions = {
+			enableBoxRefresh: false,
+			enableControlTreeView: false,
+			enableFastclick: true,
+			directChat: {
+				enable: false
+			}
+		};
+	</script>
+
+	{{/* jQuery */}}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"
+	        crossorigin="anonymous" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="></script>
+	{{/* jQuery-SlimScroll */}}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.js"
+	        crossorigin="anonymous" integrity="sha256-4K6ZHzwMYR5/eU2SeDIaByus/qki9IFY8hmxl5U6D1Y="></script>
+	{{/* Bootstrap */}}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"
+	        crossorigin="anonymous" integrity="sha256-Cr6N6zNN4bp0OwTQOZ6Z66M2r+2dpy/EwKMCyZ+SOMg="></script>
+	{{/* FastClick */}}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js"
+	        crossorigin="anonymous" integrity="sha256-GqCMs8eqcNJo0k1Zw3TBSve9COCvjIX45PYKJlH0urU="></script>
+	{{/* AdminLTE */}}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.3.11/js/app.js"
+	        crossorigin="anonymous" integrity="sha256-5xB0Elif/n83KlcRlIBm7nY8T2gIRHXjy4rtLkMVmfg="></script>
+	{{/* Global */}}
+	<script src="{{ .site.Static }}/common.js"></script>
+	<script>
+		var api_url = "{{ .site.URL }}/api";
+		var site_url = "{{ .site.URL }}";
+
+		$.ajaxSetup({
+			cache: false,
+			contentType: 'application/json',
+			dataType: 'json',
+			type: 'GET'
+		});
+
+		$("#logout").click(function(event) {
+			event.preventDefault();
+
+			$.ajax({
+				url: api_url + '/logout'
+			})
+			.done(function(data, status, jqxhr){
+				$(location).attr('href', site_url)
+			})
+			.fail(function(jqxhr, status, error){
+				console.log(error);
+			});
+		});
+	</script>
+	{{/* Local */}}
+	{{ template "scripts" . }}
+</body>
+</html>

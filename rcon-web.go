@@ -9,6 +9,8 @@ import (
 	"os"
 	"os/user"
 
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 )
 
@@ -90,6 +92,14 @@ func main() {
 	router.Use(LogMiddleware())
 	log.Debug("Logging middleware set")
 
+	// Set session store
+	store := cookie.NewStore([]byte("die, bitch"))
+	router.Use(sessions.Sessions("rcon-web", store))
+
+	// Set multi-template renderer
+
+	router.HTMLRender = multi_render()
+
 	// Create routing group, remove later
 
 	group := router.Group("/v2")
@@ -103,10 +113,18 @@ func main() {
 
 	// Set API routes
 
+	group.POST  ("/api/login",     RouteAPILogin)
+	group.GET   ("/api/logout",    RouteAPILogout)
 	group.GET   ("/api/users",     RouteAPIUsers)
 	group.PUT   ("/api/users/:id", RouteAPIUsersBan)
 	group.DELETE("/api/users/:id", RouteAPIUsersKick)
 	log.Debug("API routes set")
+
+	// Set frontend routes
+
+	group.GET("/",      RouteFEIndex)
+	group.GET("/login", RouteFELogin)
+	log.Debug("Frontend routes set")
 
 	// Start the server
 
