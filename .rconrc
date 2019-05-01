@@ -3,7 +3,6 @@
 	"geoip2_db"       : "/path/to/GeoLite2-City.mmdb",
 	"site"            : {
 	                        "url"         : "https://rcon-web.example.com/path",
-	                        "static"      : "https://rcon-web.example.com/path/static",
 	                        "title"       : "RCON"
 	                    },
 	"server_address"  : "server.example.com",

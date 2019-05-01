@@ -2,5 +2,78 @@
 {{ define "icon" }}user{{ end }}
 {{ define "description" }}Control{{ end }}
 {{ define "css" }}{{ end }}
-{{ define "content" }}{{ end }}
-{{ define "scripts" }}{{ end }}
+
+{{ define "content" }}
+	<table class="table">
+		<thead>
+			<tr>
+				<th scope="col">Name</th>
+				<th scope="col">Score</th>
+				<th scope="col">Connected</th>
+				<th scope="col">Ping</th>
+			</tr>
+		</thead>
+		<tbody id="players">
+		</tbody>
+	</table>
+{{ end }}
+
+{{ define "scripts" }}
+	<script>
+		function time_from_seconds(seconds)
+		{
+			s = Math.floor(seconds)
+			m = Math.floor(s / 60);
+			h = Math.floor(m / 60);
+
+			m = m - h * 60;
+			s = s - m * 60;
+
+			t = s
+			if (s < 10)
+			{
+				t = "0" + s
+			}
+
+			t = m + ":" + t
+			if (m < 10)
+			{
+				t = "0" + t
+			}
+
+			if (h > 0)
+			{
+				t = h + ":" + t
+			}
+
+			return t
+		}
+
+		function get_players()
+		{
+			$.ajax
+			({
+				url: api_url + '/players'
+			})
+			.done(function(data, status, jqxhr)
+			{
+				$.each(data, function(i, player)
+				{
+					var $tr = $('<tr>').append(
+						$('<td>').text(player.name),
+						$('<td>').text(player.score),
+						$('<td>').text(time_from_seconds(player.duration)),
+						$('<td>').text(player.ping),
+					);
+					$tr.appendTo('#players');
+				});
+			})
+			.fail(function(jqxhr, status, error)
+			{
+				console.log(error);
+			});
+		};
+
+		get_players();
+	</script>
+{{ end }}

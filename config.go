@@ -2,7 +2,6 @@ package main
 
 type Site struct {
 	URL         string `json:"url"`
-	Static      string `json:"static"`
 	Title       string `json:"title"`
 }
 

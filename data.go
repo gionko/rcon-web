@@ -13,7 +13,7 @@ import (
 	"github.com/rumblefrog/go-a2s"
 )
 
-type User struct {
+type Player struct {
 	Duration float32 `json:"duration"`
 	ID       string  `json:"id"`
 	IP       string  `json:"ip"`
@@ -30,8 +30,8 @@ type User struct {
 	TimeZone   string  `json:"timezone"`
 }
 
-func get_scores() ([]User, error) {
-	var users []User
+func get_scores() ([]Player, error) {
+	var players []Player
 
 	// Get A2S player request response
 
@@ -46,25 +46,25 @@ func get_scores() ([]User, error) {
 		return nil, fmt.Errorf("A2S player query error: %+v", err)
 	}
 
-	// Convert response to User slice
+	// Convert response to Player slice
 
-	for _, p := range resp.Players {
-		var u User
-		u.Name     = p.Name
-		u.Score    = p.Score
-		u.Duration = p.Duration
-		users = append(users, u)
+	for _, r := range resp.Players {
+		var p Player
+		p.Name     = r.Name
+		p.Score    = r.Score
+		p.Duration = r.Duration
+		players = append(players, p)
 	}
 
 	// Done
 
-	return users, nil
+	return players, nil
 }
 
-func get_users(status []string) ([]User, error) {
-	var users []User
+func get_players(status []string) ([]Player, error) {
+	var players []Player
 
-	// Get user scores
+	// Get player scores
 
 	scores, err := get_scores()
 	if err != nil {
@@ -78,7 +78,7 @@ func get_users(status []string) ([]User, error) {
 	}
 	defer geo.Close()
 
-	// Extract user info from status
+	// Extract player info from status
 
 	for _, line := range status {
 		re := regexp.MustCompile("(?i).*?\"(.*?)\" +(.*?) +(.*?) +(.*?) +(.*?) +(.*?) +(.*?) +(.*?):(.*?)$")
@@ -97,32 +97,32 @@ func get_users(status []string) ([]User, error) {
 		// 9: port
 
 		if match != nil {
-			var user User
-			user.ID = match[2]
-			user.IP = match[8]
-			user.Name = match[1]
-			user.State = match[6]
+			var player Player
+			player.ID = match[2]
+			player.IP = match[8]
+			player.Name = match[1]
+			player.State = match[6]
 
 			ping, err := strconv.ParseUint(match[4], 10, 32)
 			if err != nil {
-				log.Errorf("Could not extract user ping from RCON `status` response: (%s) %+v", line, err)
+				log.Errorf("Could not extract player ping from RCON `status` response: (%s) %+v", line, err)
 			} else {
-				user.Ping = uint32(ping)
+				player.Ping = uint32(ping)
 			}
 
 			// Merge duration and score
 
 			var del = -1
 			for i, score := range scores {
-				if user.Name == score.Name {
-					user.Duration = score.Duration
-					user.Score = score.Score
+				if player.Name == score.Name {
+					player.Duration = score.Duration
+					player.Score = score.Score
 					del = i
 					break
 				}
 			}
 
-			// Delete user from scores if match was found
+			// Delete player from scores if match was found
 
 			if del >= 0 {
 				scores = append(scores[:del], scores[del + 1:]...)
@@ -130,27 +130,27 @@ func get_users(status []string) ([]User, error) {
 
 			// Fill in data from GeoIP
 
-			ip := net.ParseIP(user.IP)
+			ip := net.ParseIP(player.IP)
 			record, err := geo.City(ip)
 			if err != nil {
 				log.Errorf("GeoIP error: %+v", err)
 			}
-			user.City       = record.City.Names["en"]
-			user.Country    = record.Country.Names["en"]
-			user.CountryISO = record.Country.IsoCode
-			user.Latitude   = record.Location.Latitude
-			user.Longitude  = record.Location.Longitude
-			user.TimeZone   = record.Location.TimeZone
+			player.City       = record.City.Names["en"]
+			player.Country    = record.Country.Names["en"]
+			player.CountryISO = record.Country.IsoCode
+			player.Latitude   = record.Location.Latitude
+			player.Longitude  = record.Location.Longitude
+			player.TimeZone   = record.Location.TimeZone
 
-			// Save the user
+			// Save the player
 
-			users = append(users, user)
+			players = append(players, player)
 		}
 	}
 
 	// Done
 
-	return users, nil
+	return players, nil
 }
 
 func rcon_command(command string, check string) ([]string, error) {

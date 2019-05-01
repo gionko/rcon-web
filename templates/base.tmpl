@@ -6,8 +6,8 @@
 	{{/* Tell the browser to be responsive to screen width */}}
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-	<link href="{{ .site.Static }}/favicon.ico" rel="shortcut icon" type="image/ico">
-	<link href="{{ .site.Static }}/favicon.png" rel="apple-touch-icon" type="image/png">
+	<link href="{{ .site.URL }}/static/favicon.ico" rel="shortcut icon" type="image/ico">
+	<link href="{{ .site.URL }}/static/favicon.png" rel="apple-touch-icon" type="image/png">
 
 	<title>{{ .site.Title }} | {{ template "title" . }}</title>
 
@@ -24,8 +24,8 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.3.11/css/AdminLTE.css"
 	      crossorigin="anonymous" integrity="sha256-T9nUJMQHCEMkmoCqZanmqNEdKz26MI0oOC8u2pbaJw4=">
 	{{/* Global */}}
-	<link rel="stylesheet" href="{{ .site.Static }}/skin.css">
-	<link rel="stylesheet" href="{{ .site.Static }}/common.css">
+	<link rel="stylesheet" href="{{ .site.URL }}/static/skin.css">
+	<link rel="stylesheet" href="{{ .site.URL }}/static/common.css">
 	{{/* Local */}}
 	{{ template "css" . }}
 
@@ -160,7 +160,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.3.11/js/app.js"
 	        crossorigin="anonymous" integrity="sha256-5xB0Elif/n83KlcRlIBm7nY8T2gIRHXjy4rtLkMVmfg="></script>
 	{{/* Global */}}
-	<script src="{{ .site.Static }}/common.js"></script>
+	<script src="{{ .site.URL }}/static/common.js"></script>
 	<script>
 		var api_url = "{{ .site.URL }}/api";
 		var site_url = "{{ .site.URL }}";

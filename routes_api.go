@@ -64,7 +64,7 @@ func RouteAPILogout(c *gin.Context) {
 	c.JSON(http.StatusNoContent, nil)
 }
 
-func RouteAPIUsers(c *gin.Context) {
+func RouteAPIPlayers(c *gin.Context) {
 	status, err := rcon_command("status", "hostname: +(.*?)$")
 	if err != nil {
 		log.Error(err)
@@ -72,22 +72,22 @@ func RouteAPIUsers(c *gin.Context) {
 		return
 	}
 
-	users, err := get_users(status)
+	players, err := get_players(status)
 	if err != nil {
 		log.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if len(users) == 0 {
+	if len(players) == 0 {
 		c.JSON(http.StatusNoContent, nil)
 		return
 	}
 
-	c.JSON(http.StatusOK, users)
+	c.JSON(http.StatusOK, players)
 }
 
-func RouteAPIUsersBan(c *gin.Context) {
+func RouteAPIPlayersBan(c *gin.Context) {
 	// Bind request body
 
 	type Info struct {
@@ -130,7 +130,7 @@ func RouteAPIUsersBan(c *gin.Context) {
 	c.JSON(http.StatusNoContent, nil)
 }
 
-func RouteAPIUsersKick(c *gin.Context) {
+func RouteAPIPlayersKick(c *gin.Context) {
 	// Bind request body
 
 	type Info struct {

@@ -113,11 +113,11 @@ func main() {
 
 	// Set API routes
 
-	group.POST  ("/api/login",     RouteAPILogin)
-	group.GET   ("/api/logout",    RouteAPILogout)
-	group.GET   ("/api/users",     RouteAPIUsers)
-	group.PUT   ("/api/users/:id", RouteAPIUsersBan)
-	group.DELETE("/api/users/:id", RouteAPIUsersKick)
+	group.POST  ("/api/login",       RouteAPILogin)
+	group.GET   ("/api/logout",      RouteAPILogout)
+	group.GET   ("/api/players",     RouteAPIPlayers)
+	group.PUT   ("/api/players/:id", RouteAPIPlayersBan)
+	group.DELETE("/api/players/:id", RouteAPIPlayersKick)
 	log.Debug("API routes set")
 
 	// Set frontend routes
