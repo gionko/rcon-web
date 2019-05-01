@@ -5,7 +5,6 @@
 	                        "url"         : "https://rcon-web.example.com/path",
 	                        "static"      : "https://rcon-web.example.com/path/static",
 	                        "title"       : "RCON",
-	                        "description" : "web interface"
 	                    },
 	"server_address"  : "server.example.com",
 	"server_port"     : 27015,

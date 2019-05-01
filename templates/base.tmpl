@@ -112,14 +112,14 @@
 			{{/* Content header */}}
 			<section class="content-header">
 				<h1>
-					{{ .site.Title }}
-					<small>{{ .site.Description }}</small>
+					{{ template "title" . }}
+					<small>{{ template "description" . }}</small>
 				</h1>
 				{{ if .logged }}
 				<ol class="breadcrumb">
 					<li><a href="{{ .site.URL }}"><i class="fa fa-home"></i> Home</a></li>
 					{{ block "breadcrumb" . }}
-						<li class="active"><i class="fa fa-dashboard"></i> {{ template "title" . }}</li>
+						<li class="active"><i class="fa fa-{{ template "icon" . }}"></i> {{ template "title" . }}</li>
 					{{ end }}
 				</ol>
 				{{ end }}
