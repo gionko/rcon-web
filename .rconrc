@@ -4,7 +4,7 @@
 	"site"            : {
 	                        "url"         : "https://rcon-web.example.com/path",
 	                        "static"      : "https://rcon-web.example.com/path/static",
-	                        "title"       : "RCON",
+	                        "title"       : "RCON"
 	                    },
 	"server_address"  : "server.example.com",
 	"server_port"     : 27015,
