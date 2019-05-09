@@ -5,3 +5,7 @@ GeoLite2-City.mmdb
 # Build files
 
 rcon-web
+
+# Temporary development directory: tests, etc
+
+_/
