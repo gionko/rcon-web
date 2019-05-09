@@ -2,6 +2,9 @@
 {{ define "icon" }}user{{ end }}
 {{ define "description" }}Control{{ end }}
 {{ define "css" }}
+	{{/* Flag-Icon-CSS */}}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.3.0/css/flag-icon.css"
+	      crossorigin="anonymous" integrity="sha256-jrNAqq4Gy0Gg2b6G6l0n57dPr6N1twCn+JMqY8x3l88=">
 	<style>
 		#refresh {
 			padding: 4px 8px !important;
@@ -25,6 +28,7 @@
 					<table class="table table-hover">
 						<tbody id="players">
 							<tr>
+								<th style="width: 50px;">Country</th>
 								<th>Name</th>
 								<th>Score</th>
 								<th>Connected</th>
@@ -47,7 +51,7 @@
 			h = Math.floor(m / 60);
 
 			m = m - h * 60;
-			s = s - m * 60;
+			s = s - m * 60 - h * 3600;
 
 			t = s
 			if (s < 10)
@@ -80,6 +84,7 @@
 				$.each(data, function(i, player)
 				{
 					var $tr = $('<tr>').append(
+						$('<td>').html('<span class="flag-icon flag-icon-' + player.country_iso.toLowerCase() + '"></span>'),
 						$('<td>').text(player.name),
 						$('<td>').text(player.score),
 						$('<td>').text(time_from_seconds(player.duration)),
