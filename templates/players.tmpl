@@ -1,21 +1,41 @@
 {{ define "title" }}Players{{ end }}
 {{ define "icon" }}user{{ end }}
 {{ define "description" }}Control{{ end }}
-{{ define "css" }}{{ end }}
+{{ define "css" }}
+	<style>
+		#refresh {
+			padding: 4px 8px !important;
+		}
+	</style>
+{{ end }}
 
 {{ define "content" }}
-	<table class="table">
-		<thead>
-			<tr>
-				<th scope="col">Name</th>
-				<th scope="col">Score</th>
-				<th scope="col">Connected</th>
-				<th scope="col">Ping</th>
-			</tr>
-		</thead>
-		<tbody id="players">
-		</tbody>
-	</table>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+				<div class="box-header">
+					<h3 class="box-title">List</h3>
+					<div class="box-tools">
+						<div class="btn-group">
+							<button type="button" class="btn btn-default" id="refresh"><i class="fa fa-repeat"></i></button>
+						</div>
+					</div>
+				</div>
+				<div class="box-body table-responsive no-padding">
+					<table class="table table-hover">
+						<tbody id="players">
+							<tr>
+								<th>Name</th>
+								<th>Score</th>
+								<th>Connected</th>
+								<th>Ping</th>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 {{ end }}
 
 {{ define "scripts" }}
