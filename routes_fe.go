@@ -85,10 +85,11 @@ func RouteFEMaps(c *gin.Context) {
 
 func RouteFEPlayer(c *gin.Context) {
 	data := gin.H{
-		"site"   : config.Site,
-		"logged" : true,
-		"section": "players",
-		"player" : c.Param("id"),
+		"site"     : config.Site,
+		"logged"   : true,
+		"section"  : "players",
+		"player_id": c.Param("id"),
+		"player_ip": c.Param("ip"),
 	}
 
 	if !authorized(c) {

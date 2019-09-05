@@ -1,5 +1,5 @@
 {{ define "title" }}Players{{ end }}
-{{ define "icon" }}user{{ end }}
+{{ define "icon" }}users{{ end }}
 {{ define "description" }}Control{{ end }}
 {{ define "css" }}
 	{{/* Flag-Icon-CSS */}}
@@ -95,6 +95,7 @@
 						$('<td>').text(player.ping),
 					);
 					$tr.data("id", player.id);
+					$tr.data("ip", player.ip);
 					$tr.appendTo('#players');
 				});
 			})
@@ -112,7 +113,8 @@
 		$('#players-table tbody').on('click', 'tr', function(e)
 		{
 			var id = $(this).data('id');
-			$(location).attr('href', site_url + '/players/' + id);
+			var ip = $(this).data('ip');
+			$(location).attr('href', site_url + '/players/' + id + '/' + ip);
 		});
 
 		$(function () {

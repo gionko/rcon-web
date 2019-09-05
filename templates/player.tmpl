@@ -1,11 +1,123 @@
 {{ define "title" }}Player{{ end }}
 {{ define "icon" }}user{{ end }}
-{{ define "description" }}{{ .player }}{{ end }}
+{{ define "description" }}{{ .player_id }}{{ end }}
+
 {{ define "css" }}
+	<style>
+		.btn-group.justified {
+			display: flex;
+		}
+
+		.justified .btn {
+			flex: 1;
+		}
+
+		.margin-bottom-5 {
+			margin-bottom: 5px !important;
+		}
+	</style>
+{{ end }}
+
+{{ define "breadcrumb"}}
+	<li><a href="{{ .site.URL }}/players"><i class="fa fa-users"></i> Players</a></li>
+	<li class="active"><i class="fa fa-{{ template "icon" . }}"></i> {{ template "title" . }}</li>
 {{ end }}
 
 {{ define "content" }}
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="box">
+				<div class="box-header">
+					<h3 class="box-title">Info</h3>
+				</div>
+
+				<div class="box-body table-responsive no-padding">
+					<table class="table">
+						<thead>
+							<tr>
+								<th style="width: 50px;">Country</th>
+								<th>Name</th>
+								<th>Score</th>
+								<th>Connected</th>
+								<th>Ping</th>
+							</tr>
+						</thead>
+						<tbody id="players">
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="col-sm-6">
+			<div class="box">
+				<div class="box-header">
+					<h3 class="box-title">Actions</h3>
+				</div>
+				<div class="box-body">
+					<div class="btn-group btn-group-toggle justified margin-bottom-5" data-toggle="buttons" id="reason">
+						<label class="btn btn-primary"><input type="radio" data-value="AFK" >AFK</label>
+						<label class="btn btn-primary"><input type="radio" data-value="GTFO">GTFO</label>
+						<label class="btn btn-primary"><input type="radio" data-value="NAZI">NAZI</label>
+						<label class="btn btn-primary"><input type="radio" data-value="TK"  >TK</label>
+					</div>
+					<div class="btn-group btn-group-toggle justified margin-bottom-5" data-toggle="buttons" id="period">
+						<label class="btn btn-primary"><input type="radio" data-value="60"   >1H</label>
+						<label class="btn btn-primary"><input type="radio" data-value="180"  >3H</label>
+						<label class="btn btn-primary"><input type="radio" data-value="1440" >1D</label>
+						<label class="btn btn-primary"><input type="radio" data-value="4320" >3D</label>
+						<label class="btn btn-primary"><input type="radio" data-value="10080">7D</label>
+						<label class="btn btn-primary"><input type="radio" data-value="0"    >*</label>
+					</div>
+					<button type="button" class="btn btn-block btn-warning" id="kick" disabled>Kick</button>
+					<button type="button" class="btn btn-block btn-danger" id="ban" disabled>Ban</button>
+				</div>
+			</div>
+		</div>
+	</div>
 {{ end }}
 
 {{ define "scripts" }}
+	{{/* BigNumber */}}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bignumber.js/9.0.0/bignumber.js"
+	        crossorigin="anonymous" integrity="sha256-TYZ2kR74G+TqMIiLuKpB57VUTNKhGFknyOKgRYqxhnw="></script>
+	<script>
+		var player_id = "{{ .player_id }}";
+		var player_ip = "{{ .player_ip }}";
+		var period, reason;
+
+		function steam64(id)
+		{
+			var x = id.replace('STEAM_', '').split(':');
+
+			var b = BigNumber('0x0110000100000000');
+			var y = BigNumber(x[1]);
+			var z = BigNumber(x[2]);
+
+			return b.plus(z.multipliedBy(2)).plus(y).toString();
+		}
+
+		$('#ban').click(function()
+		{
+			console.log('Ban player ' + player_id + ' for ' + period + ' minutes, reason: ' + reason);
+		});
+
+		$('#kick').click(function()
+		{
+			console.log('Kick player ' + player_id + ', reason: ' + reason);
+		});
+
+		$('#period label').click(function()
+		{
+			period = $(this).children().first().data('value');
+			$('#ban').removeAttr("disabled");
+		});
+
+		$('#reason label').click(function()
+		{
+			reason = $(this).children().first().data('value');
+			$('#kick').removeAttr("disabled");
+		});
+	</script>
 {{ end }}

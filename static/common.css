@@ -11,13 +11,3 @@
 .no-padding-top {
 	padding-top: 0 !important;
 }
-
-/* Errors */
-
-.content > .error {
-	min-height: 250px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	color: red;
-}

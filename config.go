@@ -9,6 +9,7 @@ type Config struct {
 	ApiPort        int    `json:"api_port"`
 	GeoIP2_DB      string `json:"geoip2_db"`
 	Site           Site   `json:"site"`
+	SteamKey       string `json:"steam_key"`
 
 	ServerAddress  string `json:"server_address"`
 	ServerPort     int    `json:"server_port"`

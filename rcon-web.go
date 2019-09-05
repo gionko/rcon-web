@@ -123,12 +123,12 @@ func main() {
 
 	// Set frontend routes
 
-	group.GET("/",            RouteFEIndex)
-	group.GET("/bots",        RouteFEBots)
-	group.GET("/login",       RouteFELogin)
-	group.GET("/maps",        RouteFEMaps)
-	group.GET("/players",     RouteFEPlayers)
-	group.GET("/players/:id", RouteFEPlayer)
+	group.GET("/",                RouteFEIndex)
+	group.GET("/bots",            RouteFEBots)
+	group.GET("/login",           RouteFELogin)
+	group.GET("/maps",            RouteFEMaps)
+	group.GET("/players",         RouteFEPlayers)
+	group.GET("/players/:id/:ip", RouteFEPlayer)
 	log.Debug("Frontend routes set")
 
 	// Start the server
