@@ -14,6 +14,7 @@ func multi_render() multitemplate.Render {
 	r.AddFromFiles("index",   "templates/base.tmpl", "templates/index.tmpl")
 	r.AddFromFiles("login",   "templates/base.tmpl", "templates/login.tmpl")
 	r.AddFromFiles("maps",    "templates/base.tmpl", "templates/maps.tmpl")
+	r.AddFromFiles("player",  "templates/base.tmpl", "templates/player.tmpl")
 	r.AddFromFiles("players", "templates/base.tmpl", "templates/players.tmpl")
 	return r
 }
@@ -80,6 +81,22 @@ func RouteFEMaps(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "maps", data)
+}
+
+func RouteFEPlayer(c *gin.Context) {
+	data := gin.H{
+		"site"   : config.Site,
+		"logged" : true,
+		"section": "players",
+		"player" : c.Param("id"),
+	}
+
+	if !authorized(c) {
+		c.Redirect(http.StatusFound, config.Site.URL + "/login")
+		return
+	}
+
+	c.HTML(http.StatusOK, "player", data)
 }
 
 func RouteFEPlayers(c *gin.Context) {

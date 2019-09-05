@@ -139,12 +139,6 @@
 	}
 }
 
-/* tables */
-
-.table-hover > tbody > tr:first-child {
-	background-color: #fff !important;
-}
-
 /* login */
 
 .login-box {

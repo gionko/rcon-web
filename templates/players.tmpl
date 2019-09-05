@@ -94,6 +94,7 @@
 						$('<td>').text(time_from_seconds(player.duration)),
 						$('<td>').text(player.ping),
 					);
+					$tr.data("id", player.id);
 					$tr.appendTo('#players');
 				});
 			})
@@ -103,9 +104,15 @@
 			});
 		};
 
-		$("#refresh").click(function()
+		$('#refresh').click(function()
 		{
 			get_players();
+		});
+
+		$('#players-table tbody').on('click', 'tr', function(e)
+		{
+			var id = $(this).data('id');
+			$(location).attr('href', site_url + '/players/' + id);
 		});
 
 		$(function () {

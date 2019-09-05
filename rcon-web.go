@@ -116,17 +116,19 @@ func main() {
 	group.POST  ("/api/login",       RouteAPILogin)
 	group.GET   ("/api/logout",      RouteAPILogout)
 	group.GET   ("/api/players",     RouteAPIPlayers)
+	group.GET   ("/api/players/:id", RouteAPIPlayer)
 	group.PUT   ("/api/players/:id", RouteAPIPlayersBan)
 	group.DELETE("/api/players/:id", RouteAPIPlayersKick)
 	log.Debug("API routes set")
 
 	// Set frontend routes
 
-	group.GET("/",        RouteFEIndex)
-	group.GET("/bots",    RouteFEBots)
-	group.GET("/login",   RouteFELogin)
-	group.GET("/maps",    RouteFEMaps)
-	group.GET("/players", RouteFEPlayers)
+	group.GET("/",            RouteFEIndex)
+	group.GET("/bots",        RouteFEBots)
+	group.GET("/login",       RouteFELogin)
+	group.GET("/maps",        RouteFEMaps)
+	group.GET("/players",     RouteFEPlayers)
+	group.GET("/players/:id", RouteFEPlayer)
 	log.Debug("Frontend routes set")
 
 	// Start the server

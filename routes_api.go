@@ -48,7 +48,7 @@ func RouteAPILogin(c *gin.Context) {
 
 	// Done
 
-	c.JSON(http.StatusNoContent, nil)
+	c.Status(http.StatusNoContent)
 }
 
 func RouteAPILogout(c *gin.Context) {
@@ -61,7 +61,43 @@ func RouteAPILogout(c *gin.Context) {
 
 	// Done
 
-	c.JSON(http.StatusNoContent, nil)
+	c.Status(http.StatusNoContent)
+}
+
+func RouteAPIPlayer(c *gin.Context) {
+	status, err := rcon_command("status", "hostname: +(.*?)$")
+	if err != nil {
+		log.Error(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	players, err := get_players(status)
+	if err != nil {
+		log.Error(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if len(players) == 0 {
+		c.Status(http.StatusNoContent)
+		return
+	}
+
+	var player *Player
+	for _, p := range players {
+		if p.ID == c.Param("id") {
+			player = &p
+			break
+		}
+	}
+
+	if player == nil {
+		c.Status(http.StatusNotFound)
+		return
+	}
+
+	c.JSON(http.StatusOK, player)
 }
 
 func RouteAPIPlayers(c *gin.Context) {
@@ -80,7 +116,7 @@ func RouteAPIPlayers(c *gin.Context) {
 	}
 
 	if len(players) == 0 {
-		c.JSON(http.StatusNoContent, nil)
+		c.Status(http.StatusNoContent)
 		return
 	}
 
@@ -92,7 +128,7 @@ func RouteAPIPlayersBan(c *gin.Context) {
 
 	type Info struct {
 		Message string `json:"message"`
-		Timeout int    `json:"timeout"`
+		Minutes int    `json:"minutes"`
 	}
 	info := Info{}
 
@@ -109,7 +145,7 @@ func RouteAPIPlayersBan(c *gin.Context) {
 
 	// Ban user
 
-	_, err = rcon_command(fmt.Sprintf("banid %d %s", info.Timeout, id), "(.*?) was banned (.*?)$")
+	_, err = rcon_command(fmt.Sprintf("banid %d %s", info.Minutes, id), "(.*?) was banned (.*?)$")
 	if err != nil {
 		log.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -127,7 +163,7 @@ func RouteAPIPlayersBan(c *gin.Context) {
 
 	// Done
 
-	c.JSON(http.StatusNoContent, nil)
+	c.Status(http.StatusNoContent)
 }
 
 func RouteAPIPlayersKick(c *gin.Context) {
@@ -160,5 +196,5 @@ func RouteAPIPlayersKick(c *gin.Context) {
 
 	// Done
 
-	c.JSON(http.StatusNoContent, nil)
+	c.Status(http.StatusNoContent)
 }
