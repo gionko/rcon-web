@@ -95,7 +95,6 @@
 						$('<td>').text(player.ping),
 					);
 					$tr.data("id", player.id);
-					$tr.data("ip", player.ip);
 					$tr.appendTo('#players');
 				});
 			})
@@ -113,8 +112,7 @@
 		$('#players-table tbody').on('click', 'tr', function(e)
 		{
 			var id = $(this).data('id');
-			var ip = $(this).data('ip');
-			$(location).attr('href', site_url + '/players/' + id + '/' + ip);
+			$(location).attr('href', site_url + '/players/' + id);
 		});
 
 		$(function () {

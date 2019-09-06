@@ -1,4 +1,4 @@
-{{ define "title" }}{{ .player_id }}{{ end }}
+{{ define "title" }}{{ .player }}{{ end }}
 {{ define "icon" }}user{{ end }}
 {{ define "description" }}Profile{{ end }}
 
@@ -83,18 +83,17 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bignumber.js/9.0.0/bignumber.js"
 	        crossorigin="anonymous" integrity="sha256-TYZ2kR74G+TqMIiLuKpB57VUTNKhGFknyOKgRYqxhnw="></script>
 	<script>
-		var player_id = "{{ .player_id }}";
-		var player_ip = "{{ .player_ip }}";
+		var player = "{{ .player }}";
 		var period, reason;
 
 		$('#ban').click(function()
 		{
-			console.log('Ban player ' + player_id + ' for ' + period + ' minutes, reason: ' + reason);
+			console.log('Ban player ' + player + ' for ' + period + ' minutes, reason: ' + reason);
 		});
 
 		$('#kick').click(function()
 		{
-			console.log('Kick player ' + player_id + ', reason: ' + reason);
+			console.log('Kick player ' + player + ', reason: ' + reason);
 		});
 
 		$('#period label').click(function()
