@@ -2,8 +2,11 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net"
+	"net/http"
 	"regexp"
 	"strconv"
 	"strings"
@@ -13,14 +16,23 @@ import (
 	"github.com/rumblefrog/go-a2s"
 )
 
+type Steam struct {
+	SteamID    string  `json:"steamid"`
+	Name       string  `json:"personaname"`
+	URL        string  `json:"profileurl"`
+	Avatar     string  `json:"avatarfull"`
+	Created    uint32  `json:"timecreated"`
+	CountryISO string  `json:"loccountrycode"`
+}
+
 type Player struct {
-	Duration float32 `json:"duration"`
-	ID       string  `json:"id"`
-	IP       string  `json:"ip"`
-	Name     string  `json:"name"`
-	Ping     uint32  `json:"ping"`
-	Score    uint32  `json:"score"`
-	State    string  `json:"state"`
+	Duration   float32 `json:"duration"`
+	ID         string  `json:"id"`
+	IP         string  `json:"ip"`
+	Name       string  `json:"name"`
+	Ping       uint32  `json:"ping"`
+	Score      uint32  `json:"score"`
+	State      string  `json:"state"`
 
 	City       string  `json:"city"`
 	Country    string  `json:"country"`
@@ -28,6 +40,11 @@ type Player struct {
 	Latitude   float64 `json:"latitude"`
 	Longitude  float64 `json:"longitude"`
 	TimeZone   string  `json:"timezone"`
+}
+
+type PlayerSteam struct {
+	Player
+	Steam Steam `json:"steam"`
 }
 
 func get_scores() ([]Player, error) {
@@ -151,6 +168,72 @@ func get_players(status []string) ([]Player, error) {
 	// Done
 
 	return players, nil
+}
+
+func get_steam(steamid64 string) (*Steam, error) {
+
+	// Create new HTTP request
+
+	req, err := http.NewRequest("GET", "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/", nil)
+	if err != nil {
+		return nil, fmt.Errorf("HTTP request error: %+v", err)
+	}
+
+	// Add request parameters
+
+	q := req.URL.Query()
+	q.Add("key", config.SteamKey)
+	q.Add("steamids", steamid64)
+	req.URL.RawQuery = q.Encode()
+
+	// Execute request
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("HTTP execute error: %+v", err)
+	}
+
+	// Check response status
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("Steam API response status = %s", resp.Status)
+	}
+
+	// Read response body
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("HTTP response read error: %+v", err)
+	}
+
+	// Decode response
+
+	type Response struct {
+		Players []Steam `json:"players"`
+	}
+	type Data struct {
+		Response Response `json:"response"`
+	}
+	data := Data{}
+
+	err = json.Unmarshal(body, &data)
+	if err != nil {
+		return nil, fmt.Errorf("HTTP response unmarshal error: %+v", err)
+	}
+
+	// Validate
+
+	if len(data.Response.Players) != 1 {
+		return nil, fmt.Errorf("Bad response array length: %d", len(data.Response.Players))
+	}
+
+	// Done
+
+	steam := data.Response.Players[0]
+
+	return &steam, nil
 }
 
 func rcon_command(command string, check string) ([]string, error) {

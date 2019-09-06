@@ -1,8 +1,11 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
+	"math/big"
+	"strings"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -65,12 +68,17 @@ func RouteAPILogout(c *gin.Context) {
 }
 
 func RouteAPIPlayer(c *gin.Context) {
+
+	// Get server status
+
 	status, err := rcon_command("status", "hostname: +(.*?)$")
 	if err != nil {
 		log.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	// Get player list
 
 	players, err := get_players(status)
 	if err != nil {
@@ -84,10 +92,12 @@ func RouteAPIPlayer(c *gin.Context) {
 		return
 	}
 
-	var player *Player
+	// Find player
+
+	var player *PlayerSteam
 	for _, p := range players {
 		if p.ID == c.Param("id") {
-			player = &p
+			player = &PlayerSteam{Player: p}
 			break
 		}
 	}
@@ -96,6 +106,58 @@ func RouteAPIPlayer(c *gin.Context) {
 		c.Status(http.StatusNotFound)
 		return
 	}
+
+	// Split Steam ID: STEAMID_X:Y:Z
+
+	ids := strings.Replace(player.ID, "STEAMID_", "", 1)
+	idv := strings.Split(ids, ":")
+
+	y, flag := new(big.Int).SetString(idv[1], 10)
+	if !flag {
+		err = errors.New("Error converting steam id part Y")
+		log.Errorf("Could not set big int: %+v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	z, flag := new(big.Int).SetString(idv[2], 10)
+	if !flag {
+		err = errors.New("Error converting steam id part Z")
+		log.Errorf("Could not set big int: %+v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// SteamID64 base
+
+	b, flag := new(big.Int).SetString("0110000100000000", 16)
+	if !flag {
+		err = errors.New("Error converting hex steam base")
+		log.Errorf("Could not set big int: %+v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Convert SteamID to SteamID64: z*2 + y + base
+
+	var id64 big.Int
+	id64.Mul(z, big.NewInt(2))
+	id64.Add(&id64, y)
+	id64.Add(&id64, b)
+
+	// Get Steam user summary
+
+	steam, err := get_steam(id64.String());
+	if err != nil {
+		log.Error(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if steam != nil {
+		player.Steam = *steam
+	}
+
+	// Done
 
 	c.JSON(http.StatusOK, player)
 }

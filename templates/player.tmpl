@@ -87,17 +87,6 @@
 		var player_ip = "{{ .player_ip }}";
 		var period, reason;
 
-		function steam64(id)
-		{
-			var x = id.replace('STEAM_', '').split(':');
-
-			var b = BigNumber('0x0110000100000000');
-			var y = BigNumber(x[1]);
-			var z = BigNumber(x[2]);
-
-			return b.plus(z.multipliedBy(2)).plus(y).toString();
-		}
-
 		$('#ban').click(function()
 		{
 			console.log('Ban player ' + player_id + ' for ' + period + ' minutes, reason: ' + reason);
