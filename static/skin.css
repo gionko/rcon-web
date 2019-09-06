@@ -82,6 +82,10 @@
 	.right-side {
 		padding-top: 50px;
 	}
+
+	.table-responsive {
+		border: 0px !important;
+	}
 }
 
 @media (min-width: 768px) {
@@ -120,6 +124,13 @@
 }
 .skin-nostromo .sidebar a:hover {
 	text-decoration: none;
+}
+
+/* tables */
+@media (max-width: 767px) {
+	.table-responsive {
+		border: 0px !important;
+	}
 }
 
 /* breadcrumb */

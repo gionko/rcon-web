@@ -5,6 +5,8 @@
 	                        "url"         : "https://rcon-web.example.com/path",
 	                        "title"       : "RCON"
 	                    },
+	"google_key"      : "",
+	"steam_key"       : "",
 	"server_address"  : "server.example.com",
 	"server_port"     : 27015,
 	"server_password" : "password"

@@ -88,6 +88,7 @@ func RouteFEPlayer(c *gin.Context) {
 		"site"   : config.Site,
 		"logged" : true,
 		"section": "players",
+		"google" : config.GoogleKey,
 		"player" : c.Param("id"),
 	}
 

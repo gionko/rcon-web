@@ -15,6 +15,14 @@
 		.margin-bottom-5 {
 			margin-bottom: 5px !important;
 		}
+
+		.map-box {
+			height: 400px;
+		}
+
+		#map {
+			height: 100%;
+		}
 	</style>
 {{ end }}
 
@@ -25,35 +33,32 @@
 
 {{ define "content" }}
 	<div class="row">
-		<div class="col-sm-6">
+		<div class="col-sm-4">
 			<div class="box">
 				<div class="box-header">
 					<h3 class="box-title">Info</h3>
 				</div>
-
-				<div class="box-body table-responsive no-padding">
-					<table class="table">
-						<thead>
-							<tr>
-								<th style="width: 50px;">Country</th>
-								<th>Name</th>
-								<th>Score</th>
-								<th>Connected</th>
-								<th>Ping</th>
-							</tr>
-						</thead>
-						<tbody id="players">
-						</tbody>
-					</table>
+				<div class="box-body">
+					No info
 				</div>
-
 			</div>
 		</div>
 
-		<div class="col-sm-6">
+		<div class="col-sm-4 display-none" id="map-container">
 			<div class="box">
 				<div class="box-header">
-					<h3 class="box-title">Actions</h3>
+					<h3 class="box-title">Location</h3>
+				</div>
+				<div class="box-body map-box">
+					<div id="map"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-4">
+			<div class="box">
+				<div class="box-header">
+					<h3 class="box-title">Action</h3>
 				</div>
 				<div class="box-body">
 					<div class="btn-group btn-group-toggle justified margin-bottom-5" data-toggle="buttons" id="reason">
@@ -79,12 +84,80 @@
 {{ end }}
 
 {{ define "scripts" }}
-	{{/* BigNumber */}}
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/bignumber.js/9.0.0/bignumber.js"
-	        crossorigin="anonymous" integrity="sha256-TYZ2kR74G+TqMIiLuKpB57VUTNKhGFknyOKgRYqxhnw="></script>
 	<script>
+		var map, map_style;
 		var player = "{{ .player }}";
 		var period, reason;
+
+		function initMap()
+		{
+			load_map_json(load_map_json_callback);
+		}
+
+		function load_map_json(callback)
+		{
+			var xobj = new XMLHttpRequest();
+			xobj.overrideMimeType('application/json');
+			xobj.open('GET', '{{ .site.URL }}/static/map-style.json', true);
+			xobj.onreadystatechange = function()
+			{
+				if (xobj.readyState == 4 && xobj.status == "200")
+				{
+					callback(xobj.responseText);
+				}
+			};
+			xobj.send(null);
+		}
+
+		function load_map_json_callback(response)
+		{
+			map_style = JSON.parse(response);
+
+			var styled_map_type = new google.maps.StyledMapType(map_style, {name: 'Map'});
+			map = new google.maps.Map(document.getElementById('map'), {
+				zoom: 5,
+				center: {
+					lat: 0,
+					lng: 0
+				},
+				mapTypeControlOptions: {
+					mapTypeIds: ['satellite', 'styled_map']
+				},
+				mapTypeControl: false,
+				streetViewControl: false,
+			});
+
+			map.mapTypes.set('styled_map', styled_map_type);
+			map.setMapTypeId('styled_map');
+
+			map_initialized();
+		}
+
+		function map_initialized()
+		{
+			$.ajax
+			({
+				url: api_url + '/players/' + player
+			})
+			.done(function(data, status, jqxhr)
+			{
+				/* TODO: remove me */
+				console.log('data=', data);
+
+				var pos = {
+					lat: data.latitude,
+					lng: data.longitude
+				};
+				var marker = new google.maps.Marker({position: pos, map: map});
+				map.setCenter(pos);
+
+				$('#map-container').show();
+			})
+			.fail(function(jqxhr, status, error)
+			{
+				console.log(error);
+			});
+		}
 
 		$('#ban').click(function()
 		{
@@ -115,4 +188,7 @@
 			}
 		});
 	</script>
+	{{/* Google Maps API */}}
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ .google }}&callback=initMap"
+	        type="text/javascript"></script>
 {{ end }}
