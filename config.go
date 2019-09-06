@@ -1,8 +1,9 @@
 package main
 
 type Site struct {
-	URL         string `json:"url"`
-	Title       string `json:"title"`
+	URL            string `json:"url"`
+	Logo           string `json:"logo"`
+	Title          string `json:"title"`
 }
 
 type Config struct {
