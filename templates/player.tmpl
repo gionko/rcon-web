@@ -1,6 +1,6 @@
-{{ define "title" }}Player{{ end }}
+{{ define "title" }}{{ .player_id }}{{ end }}
 {{ define "icon" }}user{{ end }}
-{{ define "description" }}{{ .player_id }}{{ end }}
+{{ define "description" }}Profile{{ end }}
 
 {{ define "css" }}
 	<style>
@@ -111,13 +111,20 @@
 		$('#period label').click(function()
 		{
 			period = $(this).children().first().data('value');
-			$('#ban').removeAttr("disabled");
+			if (reason)
+			{
+				$('#ban').removeAttr("disabled");
+			}
 		});
 
 		$('#reason label').click(function()
 		{
 			reason = $(this).children().first().data('value');
 			$('#kick').removeAttr("disabled");
+			if (period)
+			{
+				$('#ban').removeAttr("disabled");
+			}
 		});
 	</script>
 {{ end }}
