@@ -96,7 +96,7 @@
 				<div class="box-footer no-padding">
 					<ul class="nav nav-stacked">
 						<li>IP<span class="pull-right" id="player-ip"></span></li>
-						<li>Ping<span class="pull-right" id="player-ping"></span></li>
+						<li>Ping<span class="pull-right badge" id="player-ping"></span></li>
 						<li>Country<span class="pull-right" id="player-country"></span></li>
 						<li>City<span class="pull-right" id="player-city"></span></li>
 						<li>Time<span class="pull-right" id="player-time"></span></li>
@@ -204,6 +204,20 @@
 				$('#player-steam-name').html(data.steam.personaname);
 				$('#player-steam-profile').attr('href', data.steam.profileurl);
 
+				if (data.ping < 100)
+				{
+					ping_color = 'green';
+				}
+				else if (data.ping < 200)
+				{
+					ping_color = 'yellow';
+				}
+				else
+				{
+					ping_color = 'red';
+				}
+				$('#player-ping').addClass('bg-' + ping_color);
+
 				$('#info-box').collapse('show');
 
 				/* Location */
@@ -215,14 +229,14 @@
 				var marker = new google.maps.Marker({position: pos, map: map});
 				map.setCenter(pos);
 
-				$('#player-city').html(data.city);
-				$('#player-country').html(data.country);
-
 				var options = {
 					timeZone: data.timezone,
 					hour: 'numeric', minute: 'numeric', second: 'numeric',
 					hour12: false,
 				};
+
+				$('#player-city').html(data.city);
+				$('#player-country').html(data.country);
 				$('#player-time').html((new Date()).toLocaleString([], options));
 
 				$('#map-box').collapse('show');
