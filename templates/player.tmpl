@@ -252,12 +252,44 @@
 
 		$('#ban').click(function()
 		{
-			console.log('Ban player ' + player + ' for ' + period + ' minutes, reason: ' + reason);
+			$('#ban').prop("disabled", true);
+
+			$.ajax
+			({
+				data: JSON.stringify({message: reason, minutes: period}),
+				method: 'PUT',
+				url: api_url + '/players/' + player
+			})
+			.done(function(data, status, jqxhr)
+			{
+				$(location).attr('href', site_url + '/players');
+			})
+			.fail(function(jqxhr, status, error)
+			{
+				/* TODO: show error */
+				$('#ban').prop("disabled", false);
+			});
 		});
 
 		$('#kick').click(function()
 		{
-			console.log('Kick player ' + player + ', reason: ' + reason);
+			$('#kick').prop("disabled", true);
+
+			$.ajax
+			({
+				data: JSON.stringify({message: reason}),
+				method: 'DELETE',
+				url: api_url + '/players/' + player
+			})
+			.done(function(data, status, jqxhr)
+			{
+				$(location).attr('href', site_url + '/players');
+			})
+			.fail(function(jqxhr, status, error)
+			{
+				/* TODO: show error */
+				$('#kick').prop("disabled", false);
+			});
 		});
 
 		$('#period label').click(function()
