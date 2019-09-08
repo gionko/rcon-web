@@ -8,6 +8,11 @@
 			display: flex;
 		}
 
+		.box .nav-stacked > li {
+			display: block;
+			padding: 10px 15px;
+		}
+
 		.justified .btn {
 			flex: 1;
 		}
@@ -22,6 +27,10 @@
 
 		#map {
 			height: 100%;
+		}
+
+		.widget-user-image {
+			padding-top: 20px;
 		}
 	</style>
 {{ end }}
@@ -44,13 +53,34 @@
 			</div>
 		</div>
 
-		<div class="col-sm-4 collapse" id="info-box">
+		<div class="col-sm-4 collapse" id="info2-box">
 			<div class="box">
 				<div class="box-header">
 					<h3 class="box-title">Info</h3>
 				</div>
 				<div class="box-body">
 					No info
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-4 collapse" id="info-box">
+			<div class="box box-widget widget-user-2">
+				<div class="box-header">
+					<h3 class="box-title">Info</h3>
+					<div class="widget-user-image">
+						<img class="img-circle" id="player-avatar">
+					</div>
+					<h3 class="widget-user-username" id="player-name"></h3>
+					<h5 class="widget-user-desc" id="player-id"></h5>
+				</div>
+				<div class="box-footer no-padding">
+					<ul class="nav nav-stacked">
+						<li>Duration<span class="pull-right" id="player-duration"></span></li>
+						<li>Score<span class="pull-right" id="player-score"></span></li>
+						<li>Name<span class="pull-right" id="player-steam-name"></span></li>
+						<li>Profile<span class="pull-right"><a href="#" target="_blank" id="player-steam-profile">Link</a></span></li>
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -62,6 +92,15 @@
 				</div>
 				<div class="box-body map-body">
 					<div id="map"></div>
+				</div>
+				<div class="box-footer no-padding">
+					<ul class="nav nav-stacked">
+						<li>IP<span class="pull-right" id="player-ip"></span></li>
+						<li>Ping<span class="pull-right" id="player-ping"></span></li>
+						<li>Country<span class="pull-right" id="player-country"></span></li>
+						<li>City<span class="pull-right" id="player-city"></span></li>
+						<li>Time<span class="pull-right" id="player-time"></span></li>
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -97,7 +136,7 @@
 {{ define "scripts" }}
 	<script>
 		var map, map_style;
-		var player = "{{ .player }}";
+		var player = '{{ .player }}';
 		var period, reason;
 
 		function initMap()
@@ -112,7 +151,7 @@
 			xobj.open('GET', '{{ .site.URL }}/static/map-style.json', true);
 			xobj.onreadystatechange = function()
 			{
-				if (xobj.readyState == 4 && xobj.status == "200")
+				if (xobj.readyState == 4 && xobj.status == '200')
 				{
 					callback(xobj.responseText);
 				}
@@ -126,7 +165,7 @@
 
 			var styled_map_type = new google.maps.StyledMapType(map_style, {name: 'Map'});
 			map = new google.maps.Map(document.getElementById('map'), {
-				zoom: 5,
+				zoom: 6,
 				center: {
 					lat: 0,
 					lng: 0
@@ -152,10 +191,18 @@
 			})
 			.done(function(data, status, jqxhr)
 			{
-				/* TODO: remove me */
-				console.log('data=', data);
-
 				/* Info */
+
+				$('#player-avatar').attr('src', data.steam.avatarfull);
+				$('#player-name').html(data.name);
+				$('#player-id').html(data.id);
+
+				$('#player-ip').html(data.ip);
+				$('#player-ping').html(data.ping);
+				$('#player-duration').html((new Date(data.duration * 1000)).toISOString().substr(11, 8));
+				$('#player-score').html(data.score);
+				$('#player-steam-name').html(data.steam.personaname);
+				$('#player-steam-profile').attr('href', data.steam.profileurl);
 
 				$('#info-box').collapse('show');
 
@@ -167,6 +214,16 @@
 				};
 				var marker = new google.maps.Marker({position: pos, map: map});
 				map.setCenter(pos);
+
+				$('#player-city').html(data.city);
+				$('#player-country').html(data.country);
+
+				var options = {
+					timeZone: data.timezone,
+					hour: 'numeric', minute: 'numeric', second: 'numeric',
+					hour12: false,
+				};
+				$('#player-time').html((new Date()).toLocaleString([], options));
 
 				$('#map-box').collapse('show');
 			})
@@ -194,17 +251,17 @@
 			period = $(this).children().first().data('value');
 			if (reason)
 			{
-				$('#ban').removeAttr("disabled");
+				$('#ban').removeAttr('disabled');
 			}
 		});
 
 		$('#reason label').click(function()
 		{
 			reason = $(this).children().first().data('value');
-			$('#kick').removeAttr("disabled");
+			$('#kick').removeAttr('disabled');
 			if (period)
 			{
-				$('#ban').removeAttr("disabled");
+				$('#ban').removeAttr('disabled');
 			}
 		});
 	</script>
