@@ -94,7 +94,7 @@
 			</div>
 		</div>
 
-		<div class="col-sm-4">
+		<div class="col-sm-4 collapse" id="button-box">
 			<div class="box">
 				<div class="box-header">
 					<h3 class="box-title">Action</h3>
@@ -114,7 +114,7 @@
 						<label class="btn btn-primary"><input type="radio" data-value="10080">7D</label>
 						<label class="btn btn-primary"><input type="radio" data-value="0"    >*</label>
 					</div>
-					<button type="button" class="btn btn-block btn-warning" id="kick" disabled>Kick</button>
+					<button type="button" class="btn btn-block btn-warning display-none" id="kick" disabled>Kick</button>
 					<button type="button" class="btn btn-block btn-danger" id="ban" disabled>Ban</button>
 				</div>
 			</div>
@@ -229,12 +229,18 @@
 				$('#player-time').html((new Date()).toLocaleString([], options));
 
 				$('#map-box').collapse('show');
+
+				/* Actions */
+
+				$('#kick').show();
+				$('#button-box').collapse('show');
 			})
 			.fail(function(jqxhr, status, error)
 			{
 				if (jqxhr.status == 404)
 				{
 					$('#gone-box').collapse('show');
+					$('#button-box').collapse('show');
 				}
 			});
 		}
