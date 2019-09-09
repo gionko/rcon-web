@@ -273,13 +273,20 @@ func rcon_command(command string, check string) ([]string, error) {
 		return nil, fmt.Errorf("RCON response is empty")
 	}
 
-	// Check command execution via regex on first line of response
+	// Check command execution via regex on any line of response
 
+	found := false
 	re := regexp.MustCompile(check)
-	match := re.FindStringSubmatch(status[0])
 
-	if match == nil {
-		return nil, fmt.Errorf("RCON response check failed: %s", status[0])
+	for _, line := range status {
+		match := re.FindStringSubmatch(line)
+		if match != nil {
+			found = true
+		}
+	}
+
+	if !found {
+		return nil, fmt.Errorf("RCON response check failed: %s", status)
 	}
 
 	// Done

@@ -207,7 +207,7 @@ func RouteAPIPlayersBan(c *gin.Context) {
 
 	// Ban user
 
-	_, err = rcon_command(fmt.Sprintf("banid %d %s", info.Minutes, id), "(.*?) was banned (.*?)$")
+	_, err = rcon_command(fmt.Sprintf("banid %d %s", info.Minutes, id), "(.*?)was banned(.*?)$")
 	if err != nil {
 		log.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -216,7 +216,7 @@ func RouteAPIPlayersBan(c *gin.Context) {
 
 	// Kick user
 
-	_, err = rcon_command(fmt.Sprintf("kickid %s %s", id, info.Message), "(.*?) was kicked (.*?)$")
+	_, err = rcon_command(fmt.Sprintf("kickid %s %s", id, info.Message), "(.*?)Kicked by Console(.*?)$")
 	if err != nil {
 		log.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -249,7 +249,7 @@ func RouteAPIPlayersKick(c *gin.Context) {
 
 	// Kick user
 
-	_, err = rcon_command(fmt.Sprintf("kickid %s %s", id, info.Message), "(.*?) was kicked (.*?)$")
+	_, err = rcon_command(fmt.Sprintf("kickid %s %s", id, info.Message), "(.*?)Kicked by Console(.*?)$")
 	if err != nil {
 		log.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
