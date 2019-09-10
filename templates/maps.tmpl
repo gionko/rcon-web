@@ -30,14 +30,10 @@
 				<div class="box-header">
 					<h3 class="box-title">List</h3>
 				</div>
-				<div class="box-body no-padding list-group">
-					{{ range .maps }}
-						<a href="#" class="list-group-item map-select" data-value="{{ .Map }}">{{ .Name }}</a>
-					{{ end }}
+				<div class="box-body no-padding list-group" id="map-list">
 				</div>
 			</div>
 		</div>
-
 
 		<div class="col-sm-4">
 			<div class="box">
@@ -56,7 +52,30 @@
 	<script>
 		var map_selected;
 
-		$('.map-select').click(function()
+		function get_maps()
+		{
+			map_selected = null;
+
+			$.ajax
+			({
+				url: api_url + '/maps'
+			})
+			.done(function(data, status, jqxhr)
+			{
+				$('#map-list').empty();
+
+				$.each(data, function(i, map)
+				{
+					$('#map-list').append('<a href="#" class="list-group-item" data-map="' + map.map + '">' + map.name + '</a>');
+				});
+			})
+			.fail(function(jqxhr, status, error)
+			{
+				console.log(error);
+			});
+		};
+
+		$('#map-list').on('click', 'a', function(e)
 		{
 			if (map_selected)
 			{
@@ -68,6 +87,10 @@
 			}
 			map_selected = $(this);
 			map_selected.toggleClass('selected');
+		});
+
+		$(function () {
+			get_maps();
 		});
 	</script>
 {{ end }}

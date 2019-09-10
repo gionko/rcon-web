@@ -67,6 +67,57 @@ func RouteAPILogout(c *gin.Context) {
 	c.Status(http.StatusNoContent)
 }
 
+func RouteAPIMap(c *gin.Context) {
+
+	// Check if authorized
+
+	if !authorized(c) {
+		c.Status(http.StatusUnauthorized)
+		return
+	}
+
+	// Done
+
+	c.Status(http.StatusNoContent)
+}
+
+func RouteAPIMaps(c *gin.Context) {
+
+	// Check if authorized
+
+	if !authorized(c) {
+		c.Status(http.StatusUnauthorized)
+		return
+	}
+
+	// Get map list from server
+
+	reply, err := rcon_command("maps coop", "-------------") /* TODO: make mask configurable */
+	if err != nil {
+		log.Error(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Get map list
+
+	maps, err := get_maps(reply)
+	if err != nil {
+		log.Error(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if len(maps) == 0 {
+		c.Status(http.StatusNoContent)
+		return
+	}
+
+	// Done
+
+	c.JSON(http.StatusOK, maps)
+}
+
 func RouteAPIPlayer(c *gin.Context) {
 
 	// Check if authorized

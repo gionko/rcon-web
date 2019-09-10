@@ -1,10 +1,5 @@
 package main
 
-type Map struct {
-	Name           string `json:"name"`
-	Map            string `json:"map"`
-}
-
 type Site struct {
 	URL            string `json:"url"`
 	Logo           string `json:"logo"`
@@ -22,8 +17,6 @@ type Config struct {
 	ServerAddress  string `json:"server_address"`
 	ServerPort     int    `json:"server_port"`
 	ServerPassword string `json:"server_password"`
-
-	Maps           []Map  `json:"maps"`
 }
 
 var config Config

@@ -16,13 +16,9 @@ import (
 	"github.com/rumblefrog/go-a2s"
 )
 
-type Steam struct {
-	SteamID    string  `json:"steamid"`
-	Name       string  `json:"personaname"`
-	URL        string  `json:"profileurl"`
-	Avatar     string  `json:"avatarfull"`
-	Created    uint32  `json:"timecreated"`
-	CountryISO string  `json:"loccountrycode"`
+type Map struct {
+	Name       string  `json:"name"`
+	Map        string  `json:"map"`
 }
 
 type Player struct {
@@ -42,40 +38,47 @@ type Player struct {
 	TimeZone   string  `json:"timezone"`
 }
 
+type Steam struct {
+	SteamID    string  `json:"steamid"`
+	Name       string  `json:"personaname"`
+	URL        string  `json:"profileurl"`
+	Avatar     string  `json:"avatarfull"`
+	Created    uint32  `json:"timecreated"`
+	CountryISO string  `json:"loccountrycode"`
+}
+
 type PlayerSteam struct {
 	Player
 	Steam Steam `json:"steam"`
 }
 
-func get_scores() ([]Player, error) {
-	var players []Player
+func get_maps(maps []string) ([]Map, error) {
+	var list []Map
 
-	// Get A2S player request response
+	// Extract map names from `maps` command reply
 
-	req, err := a2s.NewClient(fmt.Sprintf("%s:%d", config.ServerAddress, config.ServerPort))
-	if err != nil {
-		return nil, fmt.Errorf("A2S client error: %+v", err)
-	}
-	defer req.Close()
+	for _, line := range maps {
+		re := regexp.MustCompile("(?i).*?\\(fs\\) (.*?)_coop.bsp$")
+		match := re.FindStringSubmatch(line)
 
-	resp, err := req.QueryPlayer()
-	if err != nil {
-		return nil, fmt.Errorf("A2S player query error: %+v", err)
-	}
+		// If match is successful, it will contain following data
+		// 0: full match
+		// 1: map name
 
-	// Convert response to Player slice
+		if match != nil {
+			var m Map
+			m.Name = strings.Title(match[1])
+			m.Map  = match[1] + "_coop.bsp"
 
-	for _, r := range resp.Players {
-		var p Player
-		p.Name     = r.Name
-		p.Score    = r.Score
-		p.Duration = r.Duration
-		players = append(players, p)
+			// Save the map
+
+			list = append(list, m)
+		}
 	}
 
 	// Done
 
-	return players, nil
+	return list, nil
 }
 
 func get_players(status []string) ([]Player, error) {
@@ -87,7 +90,6 @@ func get_players(status []string) ([]Player, error) {
 	if err != nil {
 		return nil, err
 	}
-
 
 	geo, err := geoip2.Open(config.GeoIP2_DB)
 	if err != nil {
@@ -163,6 +165,37 @@ func get_players(status []string) ([]Player, error) {
 
 			players = append(players, player)
 		}
+	}
+
+	// Done
+
+	return players, nil
+}
+
+func get_scores() ([]Player, error) {
+	var players []Player
+
+	// Get A2S player request response
+
+	req, err := a2s.NewClient(fmt.Sprintf("%s:%d", config.ServerAddress, config.ServerPort))
+	if err != nil {
+		return nil, fmt.Errorf("A2S client error: %+v", err)
+	}
+	defer req.Close()
+
+	resp, err := req.QueryPlayer()
+	if err != nil {
+		return nil, fmt.Errorf("A2S player query error: %+v", err)
+	}
+
+	// Convert response to Player slice
+
+	for _, r := range resp.Players {
+		var p Player
+		p.Name     = r.Name
+		p.Score    = r.Score
+		p.Duration = r.Duration
+		players = append(players, p)
 	}
 
 	// Done

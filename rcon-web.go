@@ -65,13 +65,13 @@ func main() {
 		os.Exit(1)
 	}
 
-		// Parse json data into Config structure
+	// Parse json data into Config structure
 
-		err = json.Unmarshal(data, &config)
-		if err != nil {
-			log.Errorf("Error parsing configuration file: %+v", err)
-			os.Exit(1)
-		}
+	err = json.Unmarshal(data, &config)
+	if err != nil {
+		log.Errorf("Error parsing configuration file: %+v", err)
+		os.Exit(1)
+	}
 
 	// Suppress Gin debug output
 
@@ -115,6 +115,8 @@ func main() {
 
 	group.POST  ("/api/login",       RouteAPILogin)
 	group.GET   ("/api/logout",      RouteAPILogout)
+	group.GET   ("/api/maps",        RouteAPIMaps)
+	group.GET   ("/api/maps/:id",    RouteAPIMap)
 	group.GET   ("/api/players",     RouteAPIPlayers)
 	group.GET   ("/api/players/:id", RouteAPIPlayer)
 	group.PUT   ("/api/players/:id", RouteAPIPlayersBan)

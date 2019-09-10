@@ -73,7 +73,6 @@ func RouteFEMaps(c *gin.Context) {
 		"site"   : config.Site,
 		"logged" : true,
 		"section": "maps",
-		"maps"   : config.Maps,
 	}
 
 	if !authorized(c) {
