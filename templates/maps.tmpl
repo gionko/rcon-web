@@ -1,6 +1,73 @@
 {{ define "title" }}Maps{{ end }}
 {{ define "icon" }}map{{ end }}
 {{ define "description" }}Select{{ end }}
-{{ define "css" }}{{ end }}
-{{ define "content" }}{{ end }}
-{{ define "scripts" }}{{ end }}
+
+{{ define "css" }}
+	<style>
+		.box .nav-stacked > li {
+			display: block;
+			padding: 10px 15px;
+		}
+		.list-group-item:first-child,
+		.list-group-item:last-child {
+			border-radius: 0;
+		}
+		.list-group-item {
+			border-left: 0;
+			border-right: 0;
+		}
+
+		a.list-group-item.selected {
+			background-color: #e0e0e0;
+		}
+	</style>
+{{ end }}
+
+{{ define "content" }}
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="box">
+				<div class="box-header">
+					<h3 class="box-title">List</h3>
+				</div>
+				<div class="box-body no-padding list-group">
+					{{ range .maps }}
+						<a href="#" class="list-group-item map-select" data-value="{{ .Map }}">{{ .Name }}</a>
+					{{ end }}
+				</div>
+			</div>
+		</div>
+
+
+		<div class="col-sm-4">
+			<div class="box">
+				<div class="box-header">
+					<h3 class="box-title">Action</h3>
+				</div>
+				<div class="box-body">
+					<button type="button" class="btn btn-block btn-primary" id="change" disabled>Change</button>
+				</div>
+			</div>
+		</div>
+	</div>
+{{ end }}
+
+{{ define "scripts" }}
+	<script>
+		var map_selected;
+
+		$('.map-select').click(function()
+		{
+			if (map_selected)
+			{
+				map_selected.toggleClass('selected');
+			}
+			else
+			{
+				$('#change').removeAttr('disabled');
+			}
+			map_selected = $(this);
+			map_selected.toggleClass('selected');
+		});
+	</script>
+{{ end }}

@@ -5,9 +5,63 @@
 	                        "url"         : "https://rcon-web.example.com/path",
 	                        "title"       : "RCON"
 	                    },
+
 	"google_key"      : "",
 	"steam_key"       : "",
+
 	"server_address"  : "server.example.com",
 	"server_port"     : 27015,
 	"server_password" : "password"
+
+	"maps":
+	[
+		{
+			"name"    : "Buhriz",
+			"map"     : "buhriz_coop checkpoint"
+		},
+		{
+			"name"    : "Contact",
+			"map"     : "contact_coop checkpoint"
+		},
+		{
+			"name"    : "District",
+			"map"     : "district_coop checkpoint"
+		},
+		{
+			"name"    : "Dry Canal",
+			"map"     : "drycanal_coop checkpoint"
+		},
+		{
+			"name"    : "Embassy",
+			"map"     : "embassy_coop checkpoint"
+		},
+		{
+			"name"    : "Heights",
+			"map"     : "heights_coop checkpoint"
+		},
+		{
+			"name"    : "Market",
+			"map"     : "market_coop checkpoint"
+		},
+		{
+			"name"    : "Ministry",
+			"map"     : "ministry_coop checkpoint"
+		},
+		{
+			"name"    : "Revolt",
+			"map"     : "revolt_coop checkpoint"
+		},
+		{
+			"name"    : "Siege",
+			"map"     : "siege_coop checkpoint"
+		},
+		{
+			"name"    : "Sinjar",
+			"map"     : "sinjar_coop checkpoint"
+		},
+		{
+			"name"    : "Tell",
+			"map"     : "tell_coop checkpoint"
+		}
+	]
 }
