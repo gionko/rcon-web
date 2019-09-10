@@ -69,6 +69,13 @@ func RouteAPILogout(c *gin.Context) {
 
 func RouteAPIPlayer(c *gin.Context) {
 
+	// Check if authorized
+
+	if !authorized(c) {
+		c.Status(http.StatusUnauthorized)
+		return
+	}
+
 	// Get server status
 
 	status, err := rcon_command("status", "hostname: +(.*?)$")
@@ -163,12 +170,24 @@ func RouteAPIPlayer(c *gin.Context) {
 }
 
 func RouteAPIPlayers(c *gin.Context) {
+
+	// Check if authorized
+
+	if !authorized(c) {
+		c.Status(http.StatusUnauthorized)
+		return
+	}
+
+	// Get server status
+
 	status, err := rcon_command("status", "hostname: +(.*?)$")
 	if err != nil {
 		log.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	// Get player list
 
 	players, err := get_players(status)
 	if err != nil {
@@ -182,10 +201,20 @@ func RouteAPIPlayers(c *gin.Context) {
 		return
 	}
 
+	// Done
+
 	c.JSON(http.StatusOK, players)
 }
 
 func RouteAPIPlayersBan(c *gin.Context) {
+
+	// Check if authorized
+
+	if !authorized(c) {
+		c.Status(http.StatusUnauthorized)
+		return
+	}
+
 	// Bind request body
 
 	type Info struct {
@@ -229,6 +258,14 @@ func RouteAPIPlayersBan(c *gin.Context) {
 }
 
 func RouteAPIPlayersKick(c *gin.Context) {
+
+	// Check if authorized
+
+	if !authorized(c) {
+		c.Status(http.StatusUnauthorized)
+		return
+	}
+
 	// Bind request body
 
 	type Info struct {
