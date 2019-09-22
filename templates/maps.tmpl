@@ -97,6 +97,27 @@
 			map_selected.toggleClass('selected');
 		});
 
+		$('#change').click(function()
+		{
+			$('#change').prop("disabled", true);
+
+			$.ajax
+			({
+				url: api_url + '/maps/' + map_selected.data('map')
+			})
+			.done(function(data, status, jqxhr)
+			{
+				/* TODO: add notification? */
+				map_selected.toggleClass('selected');
+				map_selected = null;
+			})
+			.fail(function(jqxhr, status, error)
+			{
+				/* TODO: show error */
+				$('#change').prop("disabled", false);
+			});
+		});
+
 		$(function () {
 			get_maps();
 		});
