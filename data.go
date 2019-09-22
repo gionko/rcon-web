@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -286,6 +287,9 @@ func rcon_command(command string, check string) ([]string, error) {
 	}
 
 	resp, err := req.Execute(command)
+	if err == io.EOF && len(check) == 0 {
+		return nil, nil
+	}
 	if err != nil {
 		return nil, fmt.Errorf("RCON `%s` command error: %+v", command, err)
 	}

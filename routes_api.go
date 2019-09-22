@@ -76,6 +76,18 @@ func RouteAPIMap(c *gin.Context) {
 		return
 	}
 
+	// Change map
+
+	/* TODO: make map type configurable, currently hardcoded to 'checkpoint' */
+
+	map_name := strings.TrimSuffix(c.Param("id"), ".bsp")
+	_, err := rcon_command("changelevel " + map_name + " checkpoint", "")
+	if err != nil {
+		log.Error(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	// Done
 
 	c.Status(http.StatusNoContent)
@@ -92,7 +104,9 @@ func RouteAPIMaps(c *gin.Context) {
 
 	// Get map list from server
 
-	reply, err := rcon_command("maps coop", "-------------") /* TODO: make mask configurable */
+	/* TODO: make mask configurable */
+
+	reply, err := rcon_command("maps coop", "-------------")
 	if err != nil {
 		log.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
