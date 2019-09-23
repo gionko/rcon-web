@@ -1,6 +1,60 @@
 {{ define "title" }}Dashboard{{ end }}
 {{ define "icon" }}dashboard{{ end }}
 {{ define "description" }}Overview{{ end }}
-{{ define "css" }}{{ end }}
-{{ define "content" }}{{ end }}
-{{ define "scripts" }}{{ end }}
+
+{{ define "css" }}
+	<style>
+		.box .nav-stacked > li {
+			display: block;
+			padding: 10px 15px;
+		}
+	</style>
+{{ end }}
+
+{{ define "content" }}
+	<div class="row">
+		<div class="col-sm-4 collapse" id="status-box">
+			<div class="box">
+				<div class="box-header">
+					<h3 class="box-title">Status</h3>
+				</div>
+				<div class="box-footer no-padding">
+					<ul class="nav nav-stacked">
+						<li>Name<span class="pull-right" id="status-name"></span></li>
+						<li>IP<span class="pull-right" id="status-ip"></span></li>
+						<li>OS<span class="pull-right" id="status-os"></span></li>
+						<li>Version<span class="pull-right" id="status-version"></span></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+{{ end }}
+
+{{ define "scripts" }}
+	<script>
+		function refresh_status()
+		{
+			$.ajax
+			({
+				url: api_url + '/status'
+			})
+			.done(function(data, status, jqxhr)
+			{
+				$('#status-name').html(data.hostname);
+				$('#status-ip').html(data.ip);
+				$('#status-os').html(data.os);
+				$('#status-version').html(data.version);
+
+				$('#status-box').collapse('show');
+			})
+			.fail(function(jqxhr, status, error)
+			{
+			});
+		}
+
+		$(function () {
+			refresh_status();
+		});
+	</script>
+{{ end }}
