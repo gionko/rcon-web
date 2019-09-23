@@ -80,8 +80,7 @@ func RouteAPIMap(c *gin.Context) {
 
 	/* TODO: make map type configurable, currently hardcoded to 'checkpoint' */
 
-	map_name := strings.TrimSuffix(c.Param("id"), ".bsp")
-	_, err := rcon_command("changelevel " + map_name + " checkpoint", "")
+	_, err := rcon_command("changelevel " + c.Param("id") + " checkpoint", "")
 	if err != nil {
 		log.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

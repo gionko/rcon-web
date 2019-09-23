@@ -59,7 +59,7 @@ func get_maps(maps []string) ([]Map, error) {
 	// Extract map names from `maps` command reply
 
 	for _, line := range maps {
-		re := regexp.MustCompile("(?i).*?\\(fs\\) (.*?)_coop.bsp$")
+		re := regexp.MustCompile("(?i).*?\\(fs\\) (.*?).bsp$")
 		match := re.FindStringSubmatch(line)
 
 		// If match is successful, it will contain following data
@@ -68,8 +68,8 @@ func get_maps(maps []string) ([]Map, error) {
 
 		if match != nil {
 			var m Map
-			m.Name = strings.Title(match[1])
-			m.Map  = match[1] + "_coop.bsp"
+			m.Name = strings.Title(strings.Split(match[1], "_")[0])
+			m.Map  = match[1]
 
 			// Save the map
 
