@@ -29,10 +29,21 @@ func authorized(c *gin.Context) bool {
 	return false
 }
 
+func scope(c *gin.Context) string {
+	session := sessions.Default(c)
+	v := session.Get("scope")
+	if v != nil {
+		return v.(string)
+	}
+
+	return ""
+}
+
 func RouteFEBots(c *gin.Context) {
 	data := gin.H{
 		"site"   : config.Site,
 		"logged" : true,
+		"scope"  : scope(c),
 		"section": "bots",
 	}
 
@@ -48,6 +59,7 @@ func RouteFEIndex(c *gin.Context) {
 	data := gin.H{
 		"site"   : config.Site,
 		"logged" : true,
+		"scope"  : scope(c),
 		"section": "dashboard",
 	}
 
@@ -72,6 +84,7 @@ func RouteFEMaps(c *gin.Context) {
 	data := gin.H{
 		"site"   : config.Site,
 		"logged" : true,
+		"scope"  : scope(c),
 		"section": "maps",
 	}
 
@@ -87,6 +100,7 @@ func RouteFEPlayer(c *gin.Context) {
 	data := gin.H{
 		"site"   : config.Site,
 		"logged" : true,
+		"scope"  : scope(c),
 		"section": "players",
 		"google" : config.GoogleKey,
 		"player" : c.Param("id"),
@@ -104,6 +118,7 @@ func RouteFEPlayers(c *gin.Context) {
 	data := gin.H{
 		"site"   : config.Site,
 		"logged" : true,
+		"scope"  : scope(c),
 		"section": "players",
 	}
 

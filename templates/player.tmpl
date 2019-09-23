@@ -8,6 +8,11 @@
 			display: flex;
 		}
 
+		.btn-group .disabled,
+		.btn-group .disabled:hover {
+			background-color: #3c8dbc;
+		}
+
 		.box .nav-stacked > li {
 			display: block;
 			padding: 10px 15px;
@@ -110,9 +115,9 @@
 						<label class="btn btn-primary"><input type="radio" data-value="60"   >1H</label>
 						<label class="btn btn-primary"><input type="radio" data-value="180"  >3H</label>
 						<label class="btn btn-primary"><input type="radio" data-value="1440" >1D</label>
-						<label class="btn btn-primary"><input type="radio" data-value="4320" >3D</label>
-						<label class="btn btn-primary"><input type="radio" data-value="10080">7D</label>
-						<label class="btn btn-primary"><input type="radio" data-value="0"    >*</label>
+						<label class="btn btn-primary {{ if ne .scope "admin"}}disabled{{end}}"><input type="radio" data-value="4320" >3D</label>
+						<label class="btn btn-primary {{ if ne .scope "admin"}}disabled{{end}}"><input type="radio" data-value="10080">7D</label>
+						<label class="btn btn-primary {{ if ne .scope "admin"}}disabled{{end}}"><input type="radio" data-value="0"    >*</label>
 					</div>
 					<button type="button" class="btn btn-block btn-warning display-none" id="kick" disabled>Kick</button>
 					<button type="button" class="btn btn-block btn-danger" id="ban" disabled>Ban</button>
@@ -289,6 +294,12 @@
 
 		$('#period label').click(function()
 		{
+			disabled = $(this).hasClass('disabled');
+			if (disabled)
+			{
+				return false;
+			}
+
 			period = $(this).children().first().data('value');
 			if (reason)
 			{

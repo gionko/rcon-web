@@ -1,13 +1,23 @@
 {{ define "title"}}Login{{ end }}
 {{ define "icon" }}{{ end }}
 {{ define "description"}}Authenticate yourself{{ end }}
-{{ define "css" }}{{ end }}
+
+{{ define "css" }}
+	<style>
+		.login-box-body {
+			border: 1px solid #c0c0c0;
+		}
+	</style>
+{{ end }}
 
 {{ define "content" }}
 	<div class="login-box display-none">
 		<div class="login-box-body">
-			<p class="login-box-msg">Enter RCON password:</p>
 			<form id="login-form">
+				<div class="form-group has-feedback">
+					<input id="login-name" class="form-control" placeholder="Name">
+					<span class="glyphicon glyphicon-user form-control-feedback"></span>
+				</div>
 				<div class="form-group has-feedback">
 					<input id="login-password" type="password" class="form-control" placeholder="Password">
 					<span class="glyphicon glyphicon-lock form-control-feedback"></span>
@@ -28,6 +38,7 @@
 			event.preventDefault();
 
 			var data = {
+				name: $('#login-name').val(),
 				password: $('#login-password').val()
 			};
 
@@ -49,6 +60,6 @@
 		});
 		$(".login-box").center(false);
 		$(".login-box").show();
-		$('#login-password').focus();
+		$('#login-name').focus();
 	</script>
 {{ end }}

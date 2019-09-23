@@ -9,7 +9,6 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/madcitygg/rcon"
 )
 
 func RouteAPIBots(c *gin.Context) {
@@ -29,6 +28,19 @@ func RouteAPIBots(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	// Log action
+
+	session := sessions.Default(c)
+	v := session.Get("name")
+	if v == nil {
+		err = errors.New("Could not extract name from session data")
+		log.Errorf("Unauthorized API action: %+v", err)
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+	}
+	name := v.(string)
+
+	log.Infof("User %s changed amount of bots to %s", name, c.Param("id"))
 
 	// Done
 
@@ -53,6 +65,19 @@ func RouteAPIDamage(c *gin.Context) {
 		return
 	}
 
+	// Log action
+
+	session := sessions.Default(c)
+	v := session.Get("name")
+	if v == nil {
+		err = errors.New("Could not extract name from session data")
+		log.Errorf("Unauthorized API action: %+v", err)
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+	}
+	name := v.(string)
+
+	log.Infof("User %s changed bot damage to %s", name, c.Param("id"))
+
 	// Done
 
 	c.Status(http.StatusNoContent)
@@ -76,15 +101,30 @@ func RouteAPIDifficulty(c *gin.Context) {
 		return
 	}
 
+	// Log action
+
+	session := sessions.Default(c)
+	v := session.Get("name")
+	if v == nil {
+		err = errors.New("Could not extract name from session data")
+		log.Errorf("Unauthorized API action: %+v", err)
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+	}
+	name := v.(string)
+
+	log.Infof("User %s changed bot difficulty to %s", name, c.Param("id"))
+
 	// Done
 
 	c.Status(http.StatusNoContent)
 }
 
 func RouteAPILogin(c *gin.Context) {
+
 	// Bind request body
 
 	type Login struct {
+		Name     string `json:"name"`
 		Password string `json:"password"`
 	}
 	login := Login{}
@@ -96,18 +136,30 @@ func RouteAPILogin(c *gin.Context) {
 		return
 	}
 
-	// Try to authenticate with provided password
+	// Find user in configuration
 
-	req, err := rcon.Dial(fmt.Sprintf("%s:%d", config.ServerAddress, config.ServerPort))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	found := false
+	var password string
+	var scope string
+
+	for _, u := range config.Users {
+		if u.Name == login.Name {
+			found = true
+			password = u.Password
+			scope = u.Scope
+			break
+		}
+	}
+
+	if !found {
+		c.Status(http.StatusNotFound)
 		return
 	}
-	defer req.Close()
 
-	err = req.Authenticate(login.Password)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	// Match passwords
+
+	if login.Password != password {
+		c.Status(http.StatusUnauthorized)
 		return
 	}
 
@@ -115,8 +167,13 @@ func RouteAPILogin(c *gin.Context) {
 
 	session := sessions.Default(c)
 	session.Set("logged", true)
-	session.Set("password", login.Password)
+	session.Set("name",   login.Name)
+	session.Set("scope",  scope)
 	session.Save()
+
+	// Log action
+
+	log.Infof("User %s (%s) logged in", login.Name, scope)
 
 	// Done
 
@@ -125,9 +182,21 @@ func RouteAPILogin(c *gin.Context) {
 
 func RouteAPILogout(c *gin.Context) {
 
-	// Login successful
+	// Log action
 
 	session := sessions.Default(c)
+	v := session.Get("name")
+	if v == nil {
+		err := errors.New("Could not extract name from session data")
+		log.Errorf("Unauthorized API action: %+v", err)
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+	}
+	name := v.(string)
+
+	log.Infof("User %s logged out", name)
+
+	// Login successful
+
 	session.Clear()
 	session.Save()
 
@@ -145,11 +214,28 @@ func RouteAPIMap(c *gin.Context) {
 		return
 	}
 
+	// Extract map id
+
+	id := c.Param("id")
+
+	// Log action
+
+	session := sessions.Default(c)
+	v := session.Get("name")
+	if v == nil {
+		err := errors.New("Could not extract name from session data")
+		log.Errorf("Unauthorized API action: %+v", err)
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+	}
+	name := v.(string)
+
+	log.Infof("User %s changed map to %s", name, id)
+
 	// Change map
 
 	/* TODO: make map type configurable, currently hardcoded to 'checkpoint' */
 
-	_, err := rcon_command("changelevel " + c.Param("id") + " checkpoint", "")
+	_, err := rcon_command("changelevel " + id + " checkpoint", "")
 	if err != nil {
 		log.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -363,9 +449,31 @@ func RouteAPIPlayersBan(c *gin.Context) {
 		return
 	}
 
+	// Check permissions
+
+	if scope(c) != "admin" && info.Minutes > 1440 {
+		err = errors.New("Only admins has permission to ban users for more than 1 day")
+		log.Errorf("Unauthorized API action: %+v", err)
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
 	// Extract user id
 
 	id := c.Param("id")
+
+	// Log action
+
+	session := sessions.Default(c)
+	v := session.Get("name")
+	if v == nil {
+		err = errors.New("Could not extract name from session data")
+		log.Errorf("Unauthorized API action: %+v", err)
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+	}
+	name := v.(string)
+
+	log.Infof("User %s banned player %s for %d minutes, %s", name, id, info.Minutes, info.Message)
 
 	// Ban user
 
@@ -416,6 +524,19 @@ func RouteAPIPlayersKick(c *gin.Context) {
 	// Extract user id
 
 	id := c.Param("id")
+
+	// Log action
+
+	session := sessions.Default(c)
+	v := session.Get("name")
+	if v == nil {
+		err = errors.New("Could not extract name from session data")
+		log.Errorf("Unauthorized API action: %+v", err)
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+	}
+	name := v.(string)
+
+	log.Infof("User %s kicked player %s, %s", name, id, info.Message)
 
 	// Kick user
 
