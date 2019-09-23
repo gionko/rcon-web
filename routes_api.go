@@ -12,6 +12,75 @@ import (
 	"github.com/madcitygg/rcon"
 )
 
+func RouteAPIBots(c *gin.Context) {
+
+	// Check if authorized
+
+	if !authorized(c) {
+		c.Status(http.StatusUnauthorized)
+		return
+	}
+
+	// Change number of bots
+
+	_, err := rcon_command("ins_bot_count_checkpoint " + c.Param("id"), ".*?ins_bot_count_checkpoint *(\\d*).*$")
+	if err != nil {
+		log.Error(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Done
+
+	c.Status(http.StatusNoContent)
+}
+
+func RouteAPIDamage(c *gin.Context) {
+
+	// Check if authorized
+
+	if !authorized(c) {
+		c.Status(http.StatusUnauthorized)
+		return
+	}
+
+	// Change bot damage
+
+	_, err := rcon_command("bot_damage " + c.Param("id"), ".*?bot_damage *(\\d*).*$")
+	if err != nil {
+		log.Error(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Done
+
+	c.Status(http.StatusNoContent)
+}
+
+func RouteAPIDifficulty(c *gin.Context) {
+
+	// Check if authorized
+
+	if !authorized(c) {
+		c.Status(http.StatusUnauthorized)
+		return
+	}
+
+	// Change bot damage
+
+	_, err := rcon_command("ins_bot_difficulty " + c.Param("id"), ".*?ins_bot_difficulty *(\\d*).*$")
+	if err != nil {
+		log.Error(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Done
+
+	c.Status(http.StatusNoContent)
+}
+
 func RouteAPILogin(c *gin.Context) {
 	// Bind request body
 
