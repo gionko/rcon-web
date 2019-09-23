@@ -102,7 +102,7 @@ func main() {
 
 	// Create routing group, remove later
 
-	group := router.Group("/v2")
+	group := router.Group("/")
 
 	// Declare assets
 
