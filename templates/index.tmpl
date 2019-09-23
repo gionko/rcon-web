@@ -26,7 +26,36 @@
 
 {{ define "content" }}
 	<div class="row">
-		<div class="col-sm-4 collapse" id="bots-box">
+		<div class="col-sm-3 collapse" id="players-box">
+			<div class="box">
+				<div class="box-header">
+					<h3 class="box-title"><a href="{{ .site.URL }}/players">Players</a></h3>
+				</div>
+				<div class="box-footer no-padding">
+					<div class="row knob-row">
+						<div class="col-xs-12 text-center">
+							<div class="knob-label">Amount</div>
+							<input type="text" class="dial" data-readOnly="true" data-height="100" data-width="100" data-fgcolor="#00c851" id="players-amount">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-3 collapse" id="map-box">
+			<div class="box">
+				<div class="box-header">
+					<h3 class="box-title"><a href="{{ .site.URL }}/maps">Map</a></h3>
+				</div>
+				<div class="box-footer no-padding">
+					<ul class="nav nav-stacked">
+						<li>Current map<span class="pull-right" id="map-name"></span></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-3 collapse" id="bots-box">
 			<div class="box">
 				<div class="box-header">
 					<h3 class="box-title"><a href="{{ .site.URL }}/bots">Bots</a></h3>
@@ -35,22 +64,22 @@
 					<div class="row knob-row">
 						<div class="col-xs-4 text-center">
 							<div class="knob-label">Amount</div>
-							<input type="text" class="dial" data-readOnly="true" data-height="100" data-width="100" data-fgcolor="#0099CC" data-min="0" data-max="24" id="bots-amount">
+							<input type="text" class="dial" data-readOnly="true" data-height="100" data-width="100" data-fgcolor="#33b5e5" data-max="24" id="bots-amount">
 						</div>
 						<div class="col-xs-4 text-center">
 							<div class="knob-label">Difficulty</div>
-							<input type="text" class="dial" data-readOnly="true" data-height="100" data-width="100" data-fgcolor="#FF8800" data-min="0" data-max="3" id="bots-difficulty">
+							<input type="text" class="dial" data-readOnly="true" data-height="100" data-width="100" data-fgcolor="#ffbb33" data-max="3" id="bots-difficulty">
 						</div>
 						<div class="col-xs-4 text-center">
 							<div class="knob-label">Damage</div>
-							<input type="text" class="dial" data-readOnly="true" data-height="100" data-width="100" data-fgcolor="#CC0000" data-min="0" data-max="1" data-step="0.1" id="bots-damage">
+							<input type="text" class="dial" data-readOnly="true" data-height="100" data-width="100" data-fgcolor="#ff4444" data-max="1" data-step="0.1" id="bots-damage">
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="col-sm-4 collapse" id="status-box">
+		<div class="col-sm-3 collapse" id="status-box">
 			<div class="box">
 				<div class="box-header">
 					<h3 class="box-title">Status</h3>
@@ -85,6 +114,18 @@
 				$('#bots-damage').val(data.damage).trigger('change');
 				$('#bots-difficulty').val(data.difficulty).trigger('change');
 				$('#bots-box').collapse('show');
+
+				$('#map-name').html(data.map);
+				$('#map-box').collapse('show');
+
+				$('#players-amount').trigger(
+					'configure',
+					{
+						'max': data.players_max
+					}
+				);
+				$('#players-amount').val(data.players).trigger('change');
+				$('#players-box').collapse('show');
 
 				$('#status-name').html(data.hostname);
 				$('#status-ip').html(data.ip);
