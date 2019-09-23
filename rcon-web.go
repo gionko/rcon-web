@@ -121,6 +121,7 @@ func main() {
 	group.GET   ("/api/players/:id", RouteAPIPlayer)
 	group.PUT   ("/api/players/:id", RouteAPIPlayersBan)
 	group.DELETE("/api/players/:id", RouteAPIPlayersKick)
+	group.GET   ("/api/status",      RouteAPIStatus)
 	log.Debug("API routes set")
 
 	// Set frontend routes

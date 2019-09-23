@@ -361,3 +361,35 @@ func RouteAPIPlayersKick(c *gin.Context) {
 
 	c.Status(http.StatusNoContent)
 }
+
+func RouteAPIStatus(c *gin.Context) {
+
+	// Check if authorized
+
+	if !authorized(c) {
+		c.Status(http.StatusUnauthorized)
+		return
+	}
+
+	// Get server status
+
+	reply, err := rcon_command("status", "hostname: +(.*?)$")
+	if err != nil {
+		log.Error(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Extract status data
+
+	status, err := get_status(reply)
+	if err != nil {
+		log.Error(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Done
+
+	c.JSON(http.StatusOK, status)
+}

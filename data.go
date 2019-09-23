@@ -53,6 +53,19 @@ type PlayerSteam struct {
 	Steam Steam `json:"steam"`
 }
 
+type Status struct {
+	Hostname   string  `json:"hostname"`
+	IP         string  `json:"ip"`
+	OS         string  `json:"os"`
+	Version    string  `json:"version"`
+	Map        string  `json:"map"`
+	Players    uint32  `json:"players"`
+	PlayersMax uint32  `json:"players_max"`
+	Bots       uint32  `json:"bots"`
+	Damage     float32 `json:"damage"`
+	Difficulty float32 `json:"difficulty"`
+}
+
 func get_maps(maps []string) ([]Map, error) {
 	var list []Map
 
@@ -204,6 +217,72 @@ func get_scores() ([]Player, error) {
 	return players, nil
 }
 
+func get_status(status []string) (*Status, error) {
+	var s Status
+
+	// Extract data from status
+
+	s.Hostname = extract(status, "hostname *: *(.*)")
+	s.IP       = extract(status, "udp/ip *: .*\\(public ip: *(.*)\\)")
+	s.OS       = extract(status, "os *: *(.*)")
+	s.Version  = extract(status, "version *: *(.*)/")
+	s.Map      = extract(status, "map *: *(.*)")
+
+	p := extract_multiple(status, "players *: *(\\d*) humans, (\\d*) bots \\((\\d*)/(\\d*) max\\).*")
+	if p != nil {
+		n, err := strconv.ParseUint(p[1], 10, 32)
+		if err != nil {
+			log.Errorf("Could not extract number of humans: (%s) %+v", p[0], err)
+		} else {
+			s.Players = uint32(n)
+		}
+
+		n, err = strconv.ParseUint(p[2], 10, 32)
+		if err != nil {
+			log.Errorf("Could not extract number of bots: (%s) %+v", p[0], err)
+		} else {
+			s.Bots = uint32(n)
+		}
+
+		n, err = strconv.ParseUint(p[3], 10, 32)
+		if err != nil {
+			log.Errorf("Could not extract max number of humans: (%s) %+v", p[0], err)
+		} else {
+			s.PlayersMax = uint32(n)
+		}
+	}
+
+	// Request and extract bot damage
+
+	reply, err := rcon_command("bot_damage", "\"bot_damage\" = +(.*?)$")
+	if err != nil {
+		return nil, err
+	}
+	damage := extract(reply, ".*= *\"([\\d.]*)\".*")
+	f, err := strconv.ParseFloat(damage, 32)
+	if err != nil {
+		return nil, err
+	}
+	s.Damage = float32(f)
+
+	// Request and extract bot difficulty
+
+	reply, err = rcon_command("ins_bot_difficulty", "\"ins_bot_difficulty\" = +(.*?)$")
+	if err != nil {
+		return nil, err
+	}
+	difficulty := extract(reply, ".*= *\"([\\d.]*)\".*")
+	f, err = strconv.ParseFloat(difficulty, 32)
+	if err != nil {
+		return nil, err
+	}
+	s.Difficulty = float32(f)
+
+	// Done
+
+	return &s, nil
+}
+
 func get_steam(steamid64 string) (*Steam, error) {
 
 	// Create new HTTP request
@@ -329,4 +408,26 @@ func rcon_command(command string, check string) ([]string, error) {
 	// Done
 
 	return status, nil
+}
+
+func extract(text []string, regex string) (string) {
+	m := extract_multiple(text, regex)
+
+	if len(m) > 1 {
+		return m[1]
+	}
+
+	return ""
+}
+
+func extract_multiple(text []string, regex string) ([]string) {
+	for _, line := range text {
+		re := regexp.MustCompile(regex)
+		match := re.FindStringSubmatch(line)
+		if match != nil {
+			return match
+		}
+	}
+
+	return nil
 }
