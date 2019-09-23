@@ -1,6 +1,135 @@
 {{ define "title" }}Bots{{ end }}
 {{ define "icon" }}laptop{{ end }}
 {{ define "description" }}Settings{{ end }}
-{{ define "css" }}{{ end }}
-{{ define "content" }}{{ end }}
-{{ define "scripts" }}{{ end }}
+
+{{ define "css" }}
+	<style>
+		.btn-group.justified {
+			display: flex;
+		}
+
+		.justified .btn {
+			flex: 1;
+		}
+	</style>
+{{ end }}
+
+{{ define "content" }}
+	<div class="row">
+		<div class="col-sm-4" id="button-box">
+			<div class="box">
+				<div class="box-header">
+					<h3 class="box-title">Amount</h3>
+				</div>
+				<div class="box-body">
+					<div class="btn-group btn-group-toggle justified margin-bottom-5" data-toggle="buttons" id="bots">
+						<label class="btn btn-primary"><input type="radio" data-value="8" >8</label>
+						<label class="btn btn-primary"><input type="radio" data-value="12">12</label>
+						<label class="btn btn-primary"><input type="radio" data-value="16">16</label>
+						<label class="btn btn-primary"><input type="radio" data-value="20">20</label>
+						<label class="btn btn-primary"><input type="radio" data-value="24">24</label>
+					</div>
+					<button type="button" class="btn btn-block btn-success" id="change_bots" disabled>Apply</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-4" id="button-box">
+			<div class="box">
+				<div class="box-header">
+					<h3 class="box-title">Difficulty</h3>
+				</div>
+				<div class="box-body">
+					<div class="btn-group btn-group-toggle justified margin-bottom-5" data-toggle="buttons" id="difficulty">
+						<label class="btn btn-primary"><input type="radio" data-value="0" >0</label>
+						<label class="btn btn-primary"><input type="radio" data-value="1">1</label>
+						<label class="btn btn-primary"><input type="radio" data-value="2">2</label>
+						<label class="btn btn-primary"><input type="radio" data-value="3">3</label>
+					</div>
+					<button type="button" class="btn btn-block btn-warning" id="change_difficulty" disabled>Apply</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-4" id="button-box">
+			<div class="box">
+				<div class="box-header">
+					<h3 class="box-title">Damage</h3>
+				</div>
+				<div class="box-body">
+					<div class="btn-group btn-group-toggle justified margin-bottom-5" data-toggle="buttons" id="damage">
+						<label class="btn btn-primary"><input type="radio" data-value="0.2">0.2</label>
+						<label class="btn btn-primary"><input type="radio" data-value="0.4">0.4</label>
+						<label class="btn btn-primary"><input type="radio" data-value="0.6">0.6</label>
+						<label class="btn btn-primary"><input type="radio" data-value="0.8">0.8</label>
+						<label class="btn btn-primary"><input type="radio" data-value="1.0">1.0</label>
+					</div>
+					<button type="button" class="btn btn-block btn-danger" id="change_damage" disabled>Apply</button>
+				</div>
+			</div>
+		</div>
+	</div>
+{{ end }}
+
+{{ define "scripts" }}
+	<script>
+		var bots_elem, difficulty_elem, damage_elem;
+		var bots, difficulty, damage;
+
+		$('#bots label').click(function()
+		{
+			bots_elem = $(this);
+			bots = $(this).children().first().data('value');
+			$('#change_bots').removeAttr('disabled');
+		});
+
+		$('#difficulty label').click(function()
+		{
+			difficulty_elem = $(this);
+			difficulty = $(this).children().first().data('value');
+			$('#change_difficulty').removeAttr('disabled');
+		});
+
+		$('#damage label').click(function()
+		{
+			damage_elem = $(this);
+			damage = $(this).children().first().data('value');
+			$('#change_damage').removeAttr('disabled');
+		});
+
+		function apply(button, url, value, elem)
+		{
+			button.prop("disabled", true);
+
+			$.ajax
+			({
+				url: api_url + url + value
+			})
+			.done(function(data, status, jqxhr)
+			{
+				value = null;
+				elem.toggleClass('active');
+			})
+			.fail(function(jqxhr, status, error)
+			{
+				/* TODO: show error */
+				button.prop("disabled", false);
+			});
+		}
+
+		$('#change_bots').click(function()
+		{
+			apply($(this), '/bots/', bots, bots_elem);
+		});
+
+		$('#change_difficulty').click(function()
+		{
+			apply($(this), '/difficulty/', difficulty, difficulty_elem);
+		});
+
+		$('#change_damage').click(function()
+		{
+			apply($(this), '/damage/', damage, damage_elem);
+		});
+	</script>
+{{ end }}
