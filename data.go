@@ -226,7 +226,7 @@ func get_status(status []string) (*Status, error) {
 	s.IP       = extract(status, "udp/ip *: .*\\(public ip: *(.*)\\)")
 	s.OS       = extract(status, "os *: *(.*)")
 	s.Version  = extract(status, "version *: *(.*)/")
-	s.Map      = extract(status, "map *: *(.*)")
+	s.Map      = strings.Title(strings.Split(extract(status, "map *: *(.*)"), "_")[0])
 
 	p := extract_multiple(status, "players *: *(\\d*) humans, (\\d*) bots \\((\\d*)/(\\d*) max\\).*")
 	if p != nil {
