@@ -101,7 +101,7 @@ func get_players(status []string) ([]Player, error) {
 	// Extract player info from status
 
 	for _, line := range status {
-		re := regexp.MustCompile("(?i).*?\"(.*?)\" +(.*?) +(.*?) +(.*?) +(.*?) +(.*?) +(.*?) +(.*?):(.*?)$")
+		re := regexp.MustCompile("(?i).*?\"(.*?)\" +(STEAM_.*?) +(.*?) +(.*?) +(.*?) +(.*?) +(.*?) +(.*?):(.*?)$")
 		match := re.FindStringSubmatch(line)
 
 		// If match is successful, it will contain following data
