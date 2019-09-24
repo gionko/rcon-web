@@ -4,6 +4,7 @@ GeoLite2-City.mmdb
 
 # Build files
 
+go.sum
 rcon-web
 
 # Temporary development directory: tests, etc
