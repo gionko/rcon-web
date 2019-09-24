@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/user"
 
+	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
@@ -143,4 +144,15 @@ func main() {
 	log.Infof("Port: %d", config.ApiPort)
 	err = http.ListenAndServe(fmt.Sprintf(":%d", config.ApiPort), router)
 	log.Fatalf("HTTP server error: %s", err)
+}
+
+func multi_render() multitemplate.Render {
+	r := multitemplate.New()
+	r.AddFromFiles("bots",    "templates/base.tmpl", "templates/bots.tmpl")
+	r.AddFromFiles("index",   "templates/base.tmpl", "templates/index.tmpl")
+	r.AddFromFiles("login",   "templates/base.tmpl", "templates/login.tmpl")
+	r.AddFromFiles("maps",    "templates/base.tmpl", "templates/maps.tmpl")
+	r.AddFromFiles("player",  "templates/base.tmpl", "templates/player.tmpl")
+	r.AddFromFiles("players", "templates/base.tmpl", "templates/players.tmpl")
+	return r
 }

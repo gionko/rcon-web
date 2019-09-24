@@ -3,41 +3,8 @@ package main
 import (
 	"net/http"
 
-	"github.com/gin-contrib/multitemplate"
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
-
-func multi_render() multitemplate.Render {
-	r := multitemplate.New()
-	r.AddFromFiles("bots",    "templates/base.tmpl", "templates/bots.tmpl")
-	r.AddFromFiles("index",   "templates/base.tmpl", "templates/index.tmpl")
-	r.AddFromFiles("login",   "templates/base.tmpl", "templates/login.tmpl")
-	r.AddFromFiles("maps",    "templates/base.tmpl", "templates/maps.tmpl")
-	r.AddFromFiles("player",  "templates/base.tmpl", "templates/player.tmpl")
-	r.AddFromFiles("players", "templates/base.tmpl", "templates/players.tmpl")
-	return r
-}
-
-func authorized(c *gin.Context) bool {
-	session := sessions.Default(c)
-	v := session.Get("logged")
-	if v != nil {
-		return v.(bool)
-	}
-
-	return false
-}
-
-func scope(c *gin.Context) string {
-	session := sessions.Default(c)
-	v := session.Get("scope")
-	if v != nil {
-		return v.(string)
-	}
-
-	return ""
-}
 
 func RouteFEBots(c *gin.Context) {
 	data := gin.H{
