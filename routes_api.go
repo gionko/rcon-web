@@ -184,14 +184,17 @@ func RouteAPILogout(c *gin.Context) {
 
 	// Log action
 
+	var name string
+
 	session := sessions.Default(c)
 	v := session.Get("name")
-	if v == nil {
+	if v != nil {
+		name = v.(string)
+	} else {
 		err := errors.New("Could not extract name from session data")
 		log.Errorf("Unauthorized API action: %+v", err)
-		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		name = "<unknown>"
 	}
-	name := v.(string)
 
 	log.Infof("User %s logged out", name)
 
