@@ -19,7 +19,7 @@ func init() {
 }
 
 func LogMiddleware() gin.HandlerFunc {
-	return LogMiddlewareWithLogger(logrus.StandardLogger())
+	return LogMiddlewareWithLogger(log)
 }
 
 func LogMiddlewareWithLogger(logger *logrus.Logger) gin.HandlerFunc {
@@ -47,7 +47,7 @@ func LogMiddlewareWithLogger(logger *logrus.Logger) gin.HandlerFunc {
 			str += fmt.Sprintf(" (%s)", comment)
 		}
 
-		logger.Info(str)
+		logger.Debug(str)
 	}
 }
 

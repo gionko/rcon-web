@@ -37,6 +37,7 @@ func RouteAPIBots(c *gin.Context) {
 		err = errors.New("Could not extract name from session data")
 		log.Errorf("Unauthorized API action: %+v", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
 	}
 	name := v.(string)
 
@@ -73,6 +74,7 @@ func RouteAPIDamage(c *gin.Context) {
 		err = errors.New("Could not extract name from session data")
 		log.Errorf("Unauthorized API action: %+v", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
 	}
 	name := v.(string)
 
@@ -109,6 +111,7 @@ func RouteAPIDifficulty(c *gin.Context) {
 		err = errors.New("Could not extract name from session data")
 		log.Errorf("Unauthorized API action: %+v", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
 	}
 	name := v.(string)
 
@@ -229,6 +232,7 @@ func RouteAPIMap(c *gin.Context) {
 		err := errors.New("Could not extract name from session data")
 		log.Errorf("Unauthorized API action: %+v", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
 	}
 	name := v.(string)
 
@@ -473,6 +477,7 @@ func RouteAPIPlayersBan(c *gin.Context) {
 		err = errors.New("Could not extract name from session data")
 		log.Errorf("Unauthorized API action: %+v", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
 	}
 	name := v.(string)
 
@@ -536,6 +541,7 @@ func RouteAPIPlayersKick(c *gin.Context) {
 		err = errors.New("Could not extract name from session data")
 		log.Errorf("Unauthorized API action: %+v", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
 	}
 	name := v.(string)
 
