@@ -15,4 +15,4 @@ RUN cp -r /usr/src/app/rcon-web /srv
 
 
 EXPOSE 9006
-ENTRYPOINT /bin/bash &&
+ENTRYPOINT /bin/sh
