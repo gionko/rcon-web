@@ -15,4 +15,4 @@ RUN cp -r /usr/src/app/rcon-web /srv
 
 
 EXPOSE 9006
-ENTRYPOINT /usr/local/bin/uwsgi --ini /srv/rcon-web/uwsgi.ini --uid www-data --gid www-data --daemonize /var/log/uwsgi.log --touch-reload /tmp/rcon-web-restart
+ENTRYPOINT systemctl start nginx && /usr/local/bin/uwsgi --ini /srv/rcon-web/uwsgi.ini --uid www-data --gid www-data --daemonize /var/log/uwsgi.log --touch-reload /tmp/rcon-web-restart
